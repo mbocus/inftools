@@ -2,9 +2,10 @@
 import argparse
 import os
 
+import tomli
+
 # from inftools.wham.Wham_Pcross import run_analysis
 from inftools.wham.Wham_Pcross import run_analysis
-import tomli
 
 
 def infretisanalyze():
@@ -44,7 +45,7 @@ def infretisanalyze():
         return
 
     # config = setup_config(imps["toml"])
-      # load input:
+    # load input:
     if os.path.isfile(imps["toml"]):
         with open(imps["toml"], mode="rb") as read:
             config = tomli.load(read)

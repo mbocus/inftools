@@ -13,6 +13,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
+numpy = "^1.26.0"
+matplotlib = "^3.7.2"
+tomli = "^2.0.1"
+tomli-w = "^1.0.0"
 
 [tool.poetry.scripts]
 infretisanalyze = "inftools.bin:infretisanalyze"
@@ -21,3 +25,38 @@ infretisanalyze = "inftools.bin:infretisanalyze"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.282"
+black = "^23.7.0"
+mypy = "^1.4.1"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+jupyter-black = "^0.3.4"
+flake8 = "^6.1.0"
+pytest-randomly = "^3.13.0"
+pre-commit = "^3.3.3"
+
+[tool.ruff]
+line-length = 79
+select = ["F", "E", "W", "I001", "UP"]
+ignore-init-module-imports = true
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.black]
+line-length = 79
+target-version = ["py310", "py311", "py312"]
+
+[tool.mypy]
+warn_unused_ignores = true
+show_error_codes = true
+plugins = "numpy.typing.mypy_plugin"
+
+[[tool.mypy.overrides]]
+module = "matplotlib.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy.optimize.*"
+ignore_missing_imports = true
