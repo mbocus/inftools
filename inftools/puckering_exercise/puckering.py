@@ -5,7 +5,6 @@ import shutil
 import subprocess
 from types import SimpleNamespace
 
-import matplotlib.pyplot as plt
 import numpy as np
 import tomli
 from infretis.classes.engines.gromacs import read_trr_file
@@ -368,6 +367,7 @@ def initial_path_from_md(arguments):
     print("\nAll done! Created folder load/ containing the initial paths.")
 
 def plot_order(arguments):
+    import matplotlib.pyplot as plt
     # Command line argument parser stuff
     parser = argparse.ArgumentParser(
         description="Plot the order parameter of all paths from an \
