@@ -1,66 +1,60 @@
 """The functions to be used to run infretis via the terminal."""
-import argparse
-import os
+import sys
 
-import tomli
+from inftools.puckering_exercise.puckering import (
+    check_indices,
+    concatenate,
+    generate_openff_topology,
+    initial_path_from_iretis,
+    initial_path_from_md,
+    plot_order,
+    recalculate_order,
+)
+from inftools.wham.wham import wham
 
-# from inftools.wham.Wham_Pcross import run_analysis
-from inftools.wham.Wham_Pcross import run_analysis
 
+def inftool():
+    """Map an inftool command to a python function.
 
-def infretisanalyze():
-    """Run Titus0 wham script."""
-    parser = argparse.ArgumentParser()
-    args = [
-        ("-toml", "the toml file for the simulation", "infretis.toml"),
-        ("-data", "the infretis data.txt file", "infretis_data.txt"),
-        ("-nskip", "number of lines to skip in infretis_data.txt", 100),
-        (
-            "-lamres",
-            "resolution along the orderparameter",
-            "(intf1-intf0)/10)",
-        ),
-        ("-nblock", "minimal number of blocks in the block-error analysis", 5),
-        (
-            "-fener",
-            "calculate free energy. See settings in tools/Free_energy.py",
-            False,
-        ),
-        ("-folder", "output folder", "wham"),
-    ]
-    # fill defaults
-    for arg, info, default in args:
-        parser.add_argument(
-            arg,
-            help=info + f" (default: {default})",
-            default=default,
-        )
+    Usage from the command line
+        inft `tool_name` `arguments`
 
-    # get user input
-    imps = vars(parser.parse_args())
+    `tool_name` is a the name of the tool you 
+    want to use.
+    `arguments` the arguments passed to the tool.
 
-    # if no toml or data file: print help
-    if not os.path.isfile(imps["toml"]) or not os.path.isfile(imps["data"]):
-        parser.print_help()
+    To get more information about each tool, pass `-h` after
+    specifying the tool name.
+    """
+
+    tool_name = sys.argv[1]
+    arguments = sys.argv[1:]
+    
+    # NOTE: when defining new functionality
+    # put the import statements in the function defenition
+    # as to avoid importing loads of libraries, which slows
+    # down the `inft` call from the command line
+    mapper = {
+            "wham":wham,
+            "check_indices":check_indices,
+            "concatenate":concatenate,
+            "generate_openff_topology":generate_openff_topology,
+            "initial_path_from_iretis":initial_path_from_iretis,
+            "initial_path_from_md":initial_path_from_md,
+            "plot_order":plot_order,
+            "recalculate_order":recalculate_order,
+            }
+
+    if sys.argv[1] in ["-h","help","--help"]:
+        print(inftool.__doc__)
+        print("Available inft commands:")
+        for key in mapper.keys():
+            print(f"\t{key}")
         return
 
-    # config = setup_config(imps["toml"])
-    # load input:
-    if os.path.isfile(imps["toml"]):
-        with open(imps["toml"], mode="rb") as read:
-            config = tomli.load(read)
-    else:
-        return
-    imps["intfs"] = config["simulation"]["interfaces"]
-
-    if imps["lamres"] == "(intf1-intf0)/10)":
-        imps["lamres"] = (imps["intfs"][1] - imps["intfs"][0]) / 10
-
-    if imps["fener"]:
-        imps["trajdir"] = config["simulation"]["load_dir"]
-
-    run_analysis(imps)
-
+    tool = mapper[tool_name]
+    # run the tool function
+    tool(arguments)
 
 def infretisinit():
     """To generate initial *toml template and other features."""

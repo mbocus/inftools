@@ -19,7 +19,7 @@ tomli = "^2.0.1"
 tomli-w = "^1.0.0"
 
 [tool.poetry.scripts]
-inft = "inftools.bin:infretisanalyze"
+inft = "inftools.bin:inftool"
 
 [build-system]
 requires = ["poetry-core"]
