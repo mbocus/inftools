@@ -88,6 +88,9 @@ def concatenate(arguments):
 
     U = {}
     # reference for rmsd alignment
+    for traj_filename in traj_file_arr:
+        if traj_filename.endswith(".g96"):
+            traj_file_arr.remove(traj_filename)
     ref = mda.Universe(args.tpr, traj_file_arr[0]).select_atoms(args.selection)
     make_whole(ref.atoms)
     for traj_file in np.unique(traj_file_arr):
