@@ -9,3 +9,7 @@ Work in progress python package that provide various AIRETIS tools for i.e. sett
    ```bash   
    python -m pip install -e .
    ```
+## Usage
+```bash
+inft -h
+```
