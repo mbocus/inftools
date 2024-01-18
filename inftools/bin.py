@@ -54,7 +54,6 @@ def inftool():
 
     tool_name = sys.argv[1]
     arguments = sys.argv[2:]
-    print(arguments)
     
     if tool_name not in list(MAPPER.keys()):
         msg = f"No tool named '{tool_name}', maybe you spelled it wrong?\n \
