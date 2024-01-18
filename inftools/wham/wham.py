@@ -35,7 +35,7 @@ def wham(arguments):
         )
 
     # get user input
-    imps = vars(parser.parse_args())
+    imps = vars(parser.parse_args(arguments))
 
     # if no toml or data file: print help
     if not os.path.isfile(imps["toml"]) or not os.path.isfile(imps["data"]):
