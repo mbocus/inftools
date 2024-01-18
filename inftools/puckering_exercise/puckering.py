@@ -131,7 +131,14 @@ def generate_openff_topology(arguments):
     from openff.units import unit
     """Generate the openff topolgy for the system."""
     # load the molecule
-    mol = Molecule.from_file(arguments[0])
+    parser = argparse.ArgumentParser(
+            description = "Generate an OpenFF topology for the puckering \
+                    example.")
+    parser.add_argument(
+        "-sdf", help="The .sdf file of your molecule (e.g. ../mol.sdf)"
+    )
+    args = parser.parse_args()
+    mol = Molecule.from_file(args.sdf)
     topology = mol.to_topology()
     topology.box_vectors = unit.Quantity([2.1, 2.1, 2.1], unit.nanometer)
     # Load the OpenFF 2.1.0 forcefield called "Sage"
