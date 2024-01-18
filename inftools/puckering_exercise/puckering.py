@@ -266,6 +266,9 @@ def initial_path_from_md(arguments):
     with open(args.toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
     interfaces = toml_dict["simulation"]["interfaces"]
+    if len(interfaces) == 0:
+        print(f"\nNo interfaces defined in '{args.toml}'!")
+        return
 
     for i in range(len(interfaces)):
         dirname = os.path.join(predir, str(i))
