@@ -33,7 +33,7 @@ def generate_zero_paths(arguments):
     tmp_dir = pathlib.Path("temporary_load/")
     tmp_dir.mkdir(exist_ok = False)
     load_dir = pathlib.Path("load/")
-    load.mkdir(exist_ok = False)
+    load_dir.mkdir(exist_ok = False)
 
     initial_configuration = args.conf
 
@@ -111,7 +111,7 @@ def generate_zero_paths(arguments):
     pathsf = [path0, path1]
     pathsr = [path0r, path1r]
     for i in range(2):
-        dirname = load / str(i)
+        dirname = load_dir / str(i)
         accepted = dirname / "accepted"
         orderfile = dirname / "order.txt"
         trajtxtfile = dirname / "traj.txt"
