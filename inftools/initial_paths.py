@@ -45,6 +45,9 @@ def generate_zero_paths(arguments):
     # initial configuration to start from
     system0 = System()
     engine = state.engines[config["engine"]["engine"]]
+        engine.set_mdrun(
+        {"wmdrun": config["dask"]["wmdrun"][0], "exe_dir": engine.exe_dir}
+    )
     system0.set_pos((os.path.join(engine.input_path, initial_configuration), 0))
     
     # empty paths we will fill forwards in time in [0-] and [0+]
