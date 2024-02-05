@@ -119,7 +119,7 @@ def generate_zero_paths(arguments):
         print(f"Making folder: {str(dirname)}")
         dirname.mkdir()
         print(f"Making folder: {str(accepted)}")
-        accpeted.mkdir()
+        accepted.mkdir()
         # combine forward and backward path
         path = paste_paths(pathsr[i], pathsf[i])
         # save order paramter
