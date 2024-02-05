@@ -31,7 +31,7 @@ def generate_zero_paths(arguments):
 
     # make a directory we work from
     tmp_dir = pathlib.Path("temporary_load/")
-    tmp_dir.make_dir(exist_ok = False)
+    tmp_dir.mkdir(exist_ok = False)
 
     initial_configuration = args.conf
 
@@ -52,7 +52,7 @@ def generate_zero_paths(arguments):
     engine = state.engines[config["engine"]["engine"]]
     engine.exe_dir = str(tmp_dir.resolve())
     print(engine.exe_dir)
-        engine.set_mdrun(
+    engine.set_mdrun(
         {"wmdrun": config["dask"]["wmdrun"][0], "exe_dir": engine.exe_dir}
     )
     system0.set_pos((os.path.join(engine.input_path, initial_configuration), 0))
