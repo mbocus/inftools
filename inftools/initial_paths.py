@@ -1,5 +1,6 @@
 import argparse
 import os
+import pathlib
 import shutil
 
 import numpy as np
@@ -28,6 +29,10 @@ def generate_zero_paths(arguments):
 
     args = parser.parse_args(arguments)
 
+    # make a directory we work from
+    tmp_dir = pathlib.Path("temporary_load/")
+    tmp_dir.make_dir(exist_ok = False)
+
     initial_configuration = args.conf
 
     # maximal length of initial paths
@@ -45,6 +50,8 @@ def generate_zero_paths(arguments):
     # initial configuration to start from
     system0 = System()
     engine = state.engines[config["engine"]["engine"]]
+    engine.exe_dir = str(tmp_dir.resolve())
+    print(engine.exe_dir)
         engine.set_mdrun(
         {"wmdrun": config["dask"]["wmdrun"][0], "exe_dir": engine.exe_dir}
     )
