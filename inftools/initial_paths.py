@@ -42,7 +42,6 @@ def generate_zero_paths(arguments):
     
     # infretis parameters
     config = setup_config(args.toml)
-    config["output"]["data_dir"] = str(tmp_dir)
     state = REPEX_state(config, minus=True)
     
     # setup ensembles
