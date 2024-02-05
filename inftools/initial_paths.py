@@ -32,6 +32,8 @@ def generate_zero_paths(arguments):
     # make a directory we work from
     tmp_dir = pathlib.Path("temporary_load/")
     tmp_dir.mkdir(exist_ok = False)
+    load_dir = pathlib.Path("load/")
+    load.mkdir(exist_ok = False)
 
     initial_configuration = args.conf
 
@@ -106,29 +108,28 @@ def generate_zero_paths(arguments):
     
     print("Done! Making load/ dir")
     # make load directories
-    dirname = "load"
     pathsf = [path0, path1]
     pathsr = [path0r, path1r]
     for i in range(2):
-        dirname = "load"
-        dirname = os.path.join(dirname, str(i))
-        accepted = os.path.join(dirname, "accepted")
-        orderfile = os.path.join(dirname, "order.txt")
-        trajtxtfile = os.path.join(dirname, "traj.txt")
-        print(f"Making folder: {dirname}")
+        dirname = load / str(i)
+        accepted = dirname / "accepted"
+        orderfile = dirname / "order.txt"
+        trajtxtfile = dirname / "traj.txt"
+        print(f"Making folder: {str(dirname)}")
         os.makedirs(dirname)
-        print(f"Making folder: {accepted}")
-        os.makedirs(accepted)
+        dirname.mkdir()
+        print(f"Making folder: {str(accepted)}")
+        accpeted.mkdir()
         # combine forward and backward path
         path = paste_paths(pathsr[i], pathsf[i])
         # save order paramter
         order = [pp.order[0] for pp in path.phasepoints]
         order = np.vstack((np.arange(len(order)), np.array(order))).T
-        np.savetxt(orderfile, order, fmt=["%d", "%12.6f"])
+        np.savetxt(str(orderfile), order, fmt=["%d", "%12.6f"])
         N = len(order)
         # save traj.txt
         np.savetxt(
-            trajtxtfile,
+            str(trajtxtfile),
             np.c_[
                 [str(i) for i in range(N)],
                 [pp.config[0].split("/")[-1] for pp in path.phasepoints],
@@ -142,4 +143,4 @@ def generate_zero_paths(arguments):
         for trajfile in np.unique(
             [pp.config[0].split("/")[-1] for pp in path.phasepoints]
         ):
-            shutil.copy(trajfile, accepted)
+            shutil.copy(tmp_load / trajfile, accepted)
