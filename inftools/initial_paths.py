@@ -56,6 +56,7 @@ def generate_zero_paths(arguments):
     # the initial phasepoint is either below or above interface 0
     print("Propagating in ensemble [0-]")
     status0, message0 = engine.propagate(path0, state.ensembles[0], system0)
+    system0.set_pos((os.path.join(engine.input_path, initial_configuration), 0))
     print("Propagating in ensemble [0+]")
     status1, message1 = engine.propagate(path1, state.ensembles[1], system0)
     
