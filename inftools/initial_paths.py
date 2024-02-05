@@ -116,7 +116,6 @@ def generate_zero_paths(arguments):
         orderfile = dirname / "order.txt"
         trajtxtfile = dirname / "traj.txt"
         print(f"Making folder: {str(dirname)}")
-        os.makedirs(dirname)
         dirname.mkdir()
         print(f"Making folder: {str(accepted)}")
         accpeted.mkdir()
