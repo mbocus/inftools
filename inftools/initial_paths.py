@@ -143,4 +143,4 @@ def generate_zero_paths(arguments):
         for trajfile in np.unique(
             [pp.config[0].split("/")[-1] for pp in path.phasepoints]
         ):
-            shutil.copy(tmp_load / trajfile, accepted)
+            shutil.copy(tmp_dir / trajfile, accepted)
