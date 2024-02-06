@@ -24,7 +24,9 @@ def generate_zero_paths(arguments):
 
     parser.add_argument("-toml", help = "The .toml file")
     parser.add_argument("-conf",
-        help = "The initial configuration to propagate from")
+        help = "The name (not the path) of the initial configuration to \
+                propagate from. inftools will look in the input folder\
+                specified in the .toml file.")
     parser.add_argument("-maxlen", help = "The maximum allowed path length", type = int)
 
     args = parser.parse_args(arguments)
