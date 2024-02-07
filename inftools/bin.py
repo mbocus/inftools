@@ -11,6 +11,7 @@ from inftools.puckering_exercise.puckering import (
     recalculate_order,
 )
 from inftools.wham.wham import wham
+from inftools.initial_paths import generate_zero_paths
 
 # NOTE: when defining new functionality
 # put the import statements in the function defenition
@@ -26,6 +27,7 @@ MAPPER = {
         "initial_path_from_md":initial_path_from_md,
         "plot_order":plot_order,
         "recalculate_order":recalculate_order,
+        "generate_zero_paths":generate_zero_paths,
         }
 
 def inftool():
