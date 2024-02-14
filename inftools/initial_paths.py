@@ -1,19 +1,17 @@
-import argparse
-import os
-import pathlib
-import shutil
-
-import numpy as np
-
-from infretis.classes.engines.factory import create_engines
-from infretis.classes.orderparameter import create_orderparameters
-from infretis.classes.path import Path, paste_paths
-from infretis.classes.repex import REPEX_state
-from infretis.classes.system import System
-from infretis.setup import setup_config
-
-
 def generate_zero_paths(arguments):
+    import argparse
+    import os
+    import pathlib
+    import shutil
+    
+    import numpy as np
+    
+    from infretis.classes.engines.factory import create_engines
+    from infretis.classes.orderparameter import create_orderparameters
+    from infretis.classes.path import Path, paste_paths
+    from infretis.classes.repex import REPEX_state
+    from infretis.classes.system import System
+    from infretis.setup import setup_config
     parser = argparse.ArgumentParser(
         description="Generate initial paths for the [0-] and [0+] \
                 ensembles by propagating a single configuration forward \
