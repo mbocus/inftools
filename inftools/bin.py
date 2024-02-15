@@ -13,6 +13,7 @@ from inftools.puckering_exercise.puckering import (
 from inftools.wham.wham import wham
 from inftools.initial_paths import generate_zero_paths
 from inftools.recalculate_order import recalculate_order_cp2k
+from inftools.concatenate import concatenate_xyz
 
 # NOTE: when defining new functionality
 # put the import statements in the function defenition
@@ -23,6 +24,7 @@ MAPPER = {
         "wham":wham,
         "check_indices":check_indices,
         "concatenate":concatenate,
+        "concatenate_xyz":concatenate_xyz,
         "generate_openff_topology":generate_openff_topology,
         "initial_path_from_iretis":initial_path_from_iretis,
         "initial_path_from_md":initial_path_from_md,
@@ -37,7 +39,7 @@ def inftool():
 
     Usage from the command line:
         inft `tool_name` `arguments`
-    
+
     `tool_name`: the name of the tool you  want to use
     `arguments`: the arguments passed to the tool
 
@@ -58,12 +60,12 @@ def inftool():
 
     tool_name = sys.argv[1]
     arguments = sys.argv[2:]
-    
+
     if tool_name not in list(MAPPER.keys()):
         msg = f"No tool named '{tool_name}', maybe you spelled it wrong?\n \
                 \nFor usage information run\n\tinft -h"
         return msg
-        
+
     tool = MAPPER[tool_name]
     # run the tool function
     tool(arguments)
