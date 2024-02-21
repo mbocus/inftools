@@ -14,6 +14,7 @@ from inftools.wham.wham import wham
 from inftools.initial_paths import generate_zero_paths
 from inftools.recalculate_order import recalculate_order_cp2k
 from inftools.concatenate import concatenate_xyz
+from inftools.get_interfaces import estimate_interfaces
 
 # NOTE: when defining new functionality
 # put the import statements in the function defenition
@@ -32,6 +33,7 @@ MAPPER = {
         "recalculate_order":recalculate_order,
         "recalculate_order_cp2k":recalculate_order_cp2k,
         "generate_zero_paths":generate_zero_paths,
+        "est_intf": estimate_interfaces,
         }
 
 def inftool():
