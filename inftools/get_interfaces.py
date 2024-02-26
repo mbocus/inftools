@@ -120,7 +120,7 @@ def estimate_interfaces(arguments):
     interfaces.append(iN)  # add last interface
     id_interfaces.append(len(x_plot) - 1)
     interfaces = np.round(np.array(interfaces), 9)
-    print("interfaces = [", ", ".join([str(itf) for itf in interfaces]) + "]")
+    print("interfaces = [", ", ".join([f"{itf:.04f}" for itf in interfaces]) + "]")
 
     if args.plot:
         f, a = plt.subplots(figsize=(8, 4))
