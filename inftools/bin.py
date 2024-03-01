@@ -10,11 +10,14 @@ from inftools.puckering_exercise.puckering import (
     plot_order,
     recalculate_order,
 )
+
 from inftools.wham.wham import wham
 from inftools.initial_paths import generate_zero_paths
 from inftools.recalculate_order import recalculate_order_cp2k
 from inftools.concatenate import concatenate_xyz
 from inftools.get_interfaces import estimate_interfaces
+from inftools.plotting.max_op import plot_max_op
+from inftools.calcs import calc_rate 
 
 # NOTE: when defining new functionality
 # put the import statements in the function defenition
@@ -34,6 +37,8 @@ MAPPER = {
         "recalculate_order_cp2k":recalculate_order_cp2k,
         "generate_zero_paths":generate_zero_paths,
         "est_intf": estimate_interfaces,
+        "plot_op":plot_max_op,
+        "calc_rate":calc_rate,
         }
 
 def inftool():
