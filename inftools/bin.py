@@ -17,8 +17,8 @@ from inftools.recalculate_order import recalculate_order_cp2k
 from inftools.concatenate import concatenate_xyz
 from inftools.get_interfaces import estimate_interfaces
 from inftools.plotting.max_op import plot_max_op
-from inftools.calcs import calc_rate
 from inftools.check_data import check_data
+from inftools.calcs import calc_rate, calc_ensdata, get_time
 
 # NOTE: when defining new functionality
 # put the import statements in the function defenition
@@ -41,6 +41,8 @@ MAPPER = {
         "plot_op":plot_max_op,
         "calc_rate":calc_rate,
         "check_data":check_data,
+        "calc_ensdata":calc_ensdata,
+        "get_time":get_time
         }
 
 def inftool():

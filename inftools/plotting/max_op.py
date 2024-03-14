@@ -12,22 +12,15 @@ def infretis_data_reader(input):
     with open(input, 'r') as read:
         _, head, _ = (read.readline(), read.readline(), read.readline())
         num_ens = len(head.rstrip().split()) - 5
-        ens_dic = {i : {'op': [], 'haw': []} for i in range(num_ens)}
+        ens_dic = {i : {'op': [], 'haw': [], 'w': []} for i in range(num_ens)}
         for line in read:
             rip = line.rstrip().split()[3:]
             pinfo = line.rstrip().split()[:3]
-            # if pinfo[0] == '72':
-            #     print(line.rstrip())
-            for idx, (op, haw) in enumerate(zip(rip[:num_ens], rip[num_ens:])):
-                # if pinfo[0] == '72':
-                #     print('whaid', (op, haw), '-' in (op, haw), len(rip[:num_ens]), len(rip[num_ens:]))
-                if '----' in (op, haw):
+            for idx, (w, haw) in enumerate(zip(rip[:num_ens], rip[num_ens:])):
+                if '----' in (w, haw):
                     continue
-                # print('whaid', (op, haw), '-' in (op, haw))
-                if idx == 0:
-                    print('crow1', op)
-                    print('crow2', haw)
                 ens_dic[idx]['op'].append(float(pinfo[2]))
+                ens_dic[idx]['w'].append(float(w))
                 ens_dic[idx]['haw'].append(float(haw))
     return ens_dic
 
@@ -63,10 +56,27 @@ def plot_max_op(arguments):
     plt.axhline(intfs[-1], color=f'k')
     plt.axhline(intfs[args.ensp], color=f'C0')
     plt.axhline(intfs[args.ensp+1], color=f'C1')
+    print('# interface', intfs[args.ensp])
 
     ens_dic = infretis_data_reader(args.data)
     data = ens_dic[args.ensp+1]
-    plt.scatter(list(range(len(data['op']))), data['op'], color=f'C0')
+    # print('len', len(data['op']))
+    # we = np.array(data['w'])/np.array(data['haw'])
+    # we = we/max(we)
+    for i in range(2):
+        we = np.array(data['w'])/np.array(data['haw'])
+        we = we/max(we)
+        maxidx = np.argmax(we)
+        data['op'].pop(maxidx)
+        data['haw'].pop(maxidx)
+        data['w'].pop(maxidx)
+    we = np.array(data['w'])/np.array(data['haw'])
+    we = (we/max(we))**2
+    # print(sorted(we))
+    for i, j in enumerate(data['op']):
+        print(i, j, data['w'][i], data['haw'][i])
+
+    plt.scatter(list(range(len(data['op']))), data['op'], color=f'C0')#, alpha=we)
 
     # for idx, (key, item) in enumerate(ens_dic.items()):
     #     if idx == 0 or idx - 1 not in args.ensp:
