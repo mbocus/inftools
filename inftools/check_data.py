@@ -32,22 +32,21 @@ def check_data(arguments):
 
         OP_matrix[i, idx[0]] = xi[2].astype(float)
 
-    # histogram bin width stuff
-
     if args.plot:
         f,a = plt.subplots(1, N_ens, sharey = True)
 
     for ens in range(N_ens):
 
-        # Left and Middle interfaces
         ens_intf = ens
+        #[0-] ens stuff
         if ens > 0:
             ens_intf -=1
+        # Left and Middle interfaces
         L = interfaces[ens_intf]
         M = interfaces[ens_intf + 1]
 
-        # histogram
         path_nr = OP_matrix[:,ens]!=0
+        # max OP value of all paths in ensemble ens
         op = OP_matrix[:,ens][path_nr]
 
         if args.plot:
