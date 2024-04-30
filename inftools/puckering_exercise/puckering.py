@@ -431,10 +431,11 @@ def plot_order(arguments):
         x = np.loadtxt(path)
         if x[-1, 1] > interfaces[-1]:
             print()
-            print(
-                f"The path in {path} is reactive with \
-    phi={x[-1,2]:.2f}! \U0001F389 \U0001F938 \U0001F483"
-            )
+            print('www', x)
+#             print(
+#                 f"The path in {path} is reactive with \
+#     phi={x[-1,2]:.2f}! \U0001F389 \U0001F938 \U0001F483"
+#             )
         #    continue # continues to next iteration in loop
         a.plot(
             x[:, args.xy[0]],
@@ -478,6 +479,7 @@ def recalculate_order(arguments):
             system = SimpleNamespace(
                 pos=frame[1]["x"],
                 box=np.diag(frame[1]["box"]),
+                config=(args.trr,999),
             )
             op = orderparameter.calculate(system)
             line = f"{i} " + " ".join([f"{opi}" for opi in op]) + "\n"
