@@ -56,6 +56,7 @@ def generate_zero_paths(arguments):
         {"wmdrun": config["dask"]["wmdrun"][0], "exe_dir": engine.exe_dir}
     )
     system0.set_pos((os.path.join(engine.input_path, initial_configuration), 0))
+    engine.modify_velocities(system0, config["simulation"]["tis_set"])
 
     # empty paths we will fill forwards in time in [0-] and [0+]
     path0 = Path(maxlen=maxlen)
