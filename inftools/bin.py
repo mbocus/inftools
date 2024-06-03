@@ -19,6 +19,7 @@ from inftools.get_interfaces import estimate_interfaces
 from inftools.plotting.max_op import plot_max_op
 from inftools.check_data import check_data
 from inftools.calcs import calc_rate, calc_ensdata, get_time
+from inftools.flow import calc_flow
 
 # NOTE: when defining new functionality
 # put the import statements in the function defenition
@@ -42,7 +43,8 @@ MAPPER = {
         "calc_rate":calc_rate,
         "check_data":check_data,
         "calc_ensdata":calc_ensdata,
-        "get_time":get_time
+        "get_time":get_time,
+        "flow":calc_flow,
         }
 
 def inftool():
