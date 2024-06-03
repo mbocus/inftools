@@ -55,12 +55,13 @@ def calc_flow(arguments):
             if "->" in line and not initialize:
                 line = line.split()
                 # this is a zero swap
+                #print(line)
                 if len(line)==15:
                     ens0, ens1 = 0, 1
                     pathnr0_old, pathnr1_old = line[-5:-3]
                     pathnr1_new, pathnr0_new = line[-2:]
 
-                    if pathnr0_new != pathnr0_old:
+                    if pathnr1_new != pathnr0_old:
                         path_map[pathnr0_new] = path_map[pathnr0_old]
                         del path_map[pathnr0_old]
 
@@ -125,7 +126,7 @@ def calc_flow(arguments):
 
         # plotting stuff
         if args.plot is not None:
-            if args.plot == ['all']:
+            if args.plot == ['all'] or len(args.plot) == 0:
                 plot_range = range(n_ensembles)
             else:
                 plot_range = []
@@ -135,6 +136,8 @@ def calc_flow(arguments):
                     except ValueError:
                         print(f"Invalid axis value: {args.plot}")
             for j in plot_range:
-                plt.plot(flow_map[j], label = f"path {j}", marker = "o", markersize = 2)
+                plt.plot(flow_map[j], label = f"path {j}", marker = "o", markersize = 5)
+            plt.axhline(0, c = "k")
+            plt.axhline(n_ensembles - 1, c = "k")
             plt.legend()
             plt.show()
