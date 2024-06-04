@@ -430,12 +430,10 @@ def plot_order(arguments):
     for path in sorted_paths:
         x = np.loadtxt(path)
         if x[-1, 1] > interfaces[-1]:
-            print()
-            print('www', x)
-#             print(
-#                 f"The path in {path} is reactive with \
-#     phi={x[-1,2]:.2f}! \U0001F389 \U0001F938 \U0001F483"
-#             )
+             print(
+                 f"The path in {path} is reactive with \
+     phi={x[-1,1]:.2f}! \U0001F389 \U0001F938 \U0001F483"
+             )
         #    continue # continues to next iteration in loop
         a.plot(
             x[:, args.xy[0]],
@@ -447,42 +445,3 @@ def plot_order(arguments):
         )
 
     plt.show()
-
-def recalculate_order(arguments):
-    parser = argparse.ArgumentParser(
-        description="Recalculate the orderparameter from a .trr file"
-    )
-
-    parser.add_argument("-trr", help="The .trr trajectory file")
-    parser.add_argument(
-        "-toml", help="The .toml input file defining the orderparameter"
-    )
-    parser.add_argument(
-        "-out",
-        help="The output file. Default: order-rec.txt",
-        default="order-rec.txt",
-    )
-
-    args = parser.parse_args(arguments)
-
-
-    traj = read_trr_file(args.trr)
-    with open(args.toml, "rb") as toml_file:
-        toml_dict = tomli.load(toml_file)
-
-    orderparameter = create_orderparameter(toml_dict)
-    # interfaces = toml_dict["simulation"]["interfaces"]
-
-    with open(args.out, "w") as writefile:
-        writefile.write("# step\ttheta\tphi\tQ\n")
-        for i, frame in enumerate(traj):
-            system = SimpleNamespace(
-                pos=frame[1]["x"],
-                box=np.diag(frame[1]["box"]),
-                config=(args.trr,999),
-            )
-            op = orderparameter.calculate(system)
-            line = f"{i} " + " ".join([f"{opi}" for opi in op]) + "\n"
-            writefile.write(line)
-
-    print(f"\nAll done!\nOrderparameter values written to {args.out}")

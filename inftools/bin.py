@@ -8,12 +8,11 @@ from inftools.puckering_exercise.puckering import (
     initial_path_from_iretis,
     initial_path_from_md,
     plot_order,
-    recalculate_order,
 )
 
 from inftools.wham.wham import wham
 from inftools.initial_paths import generate_zero_paths
-from inftools.recalculate_order import recalculate_order_cp2k
+from inftools.recalculate_order import recalculate_order
 from inftools.concatenate import concatenate_xyz
 from inftools.get_interfaces import estimate_interfaces
 from inftools.plotting.max_op import plot_max_op
@@ -36,7 +35,6 @@ MAPPER = {
         "initial_path_from_md":initial_path_from_md,
         "plot_order":plot_order,
         "recalculate_order":recalculate_order,
-        "recalculate_order_cp2k":recalculate_order_cp2k,
         "generate_zero_paths":generate_zero_paths,
         "est_intf": estimate_interfaces,
         "plot_op":plot_max_op,
