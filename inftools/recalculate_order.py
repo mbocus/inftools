@@ -46,6 +46,10 @@ def recalculate_order(arguments):
     orderparameter = create_orderparameter(toml_dict)
     # interfaces = toml_dict["simulation"]["interfaces"]
 
+    if not args.traj.endswith(args.format):
+        msg = f"[ WARNING ] {args.traj} may not be a {args.format} formatted"\
+        " file. Use the -format flag to be sure you get some output"
+        print(msg)
     if args.format == "xyz":
         if args.box is None:
             raise ValueError("Provide a box size for xyz files.")
@@ -64,8 +68,8 @@ def recalculate_order(arguments):
             if args.format == "xyz":
                 pos=np.vstack((frame["x"], frame["y"], frame["z"])).T
             elif args.format == "traj":
-                atoms = frame.positions
-                box = np.diag(frame.box.cell.array)
+                pos = frame.positions
+                box = np.diag(frame.cell.array)
             elif args.format == "trr":
                 pos=frame[1]["x"]
                 box=np.diag(frame[1]["box"])
@@ -79,4 +83,4 @@ def recalculate_order(arguments):
             line = f"{i} " + " ".join([f"{opi}" for opi in op]) + "\n"
             writefile.write(line)
 
-    print(f"\nAll done!\nOrderparameter values written to {args.out}")
+    print(f"[ INFO ] Orderparameter values written to {args.out}\n")
