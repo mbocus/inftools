@@ -354,9 +354,9 @@ def initial_path_from_md(arguments):
         N = len(iterator)
         np.savetxt(
             orderfile,
-            np.c_[order[:N, 0], order[iterator, 1]],
+            np.c_[order[:N, 0], order[iterator, 1:]],
             header=f"{'time':>10} {'order':>15}",
-            fmt=["%10.d", "%15.4f"],
+            fmt=["%10.d"] + ["%15.4f" for fmti in order[0, 1:]],
         )
         np.savetxt(
             trajtxtfile,
