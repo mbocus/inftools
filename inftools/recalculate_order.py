@@ -10,6 +10,7 @@ def recalculate_order(arguments):
     """
 
     import argparse
+    import os
 
     import numpy as np
     import tomli
@@ -40,6 +41,9 @@ def recalculate_order(arguments):
     parser.add_argument( "-out", help="The output file (order-rec.txt)", default="order-rec.txt")
 
     args = parser.parse_args(arguments)
+
+    if os.path.exists(args.out):
+        raise FileExistsError(f"File {args.out} exists, aborting")
 
     with open(args.toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
