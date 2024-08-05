@@ -1,3 +1,9 @@
+from typing import Annotated, Tuple
+import typer
+
+# Disable automatic underscore -> hypen in CLI names
+typer.main.get_command_name = lambda name: name
+
 import argparse
 import glob
 import os
@@ -7,32 +13,18 @@ from types import SimpleNamespace
 
 import numpy as np
 import tomli
-from infretis.classes.engines.gromacs import read_trr_file
-from infretis.classes.orderparameter import Puckering, create_orderparameter
+from infretis.classes.orderparameter import Puckering
 
 
-def check_indices(arguments):
-    parser = argparse.ArgumentParser(
-        description="Calculate the theta and phi angle for an \
-                .sdf file given a set of indices"
-    )
+def check_indices(
+        sdf: Annotated[str, typer.Option("-sdf", help="The .sdf file of your molecule (e.g. mol.sdf)")],
+        idx: Annotated[Tuple[int, int, int, int, int, int], typer.Option("-idx", help="The ordered indices of your molecule (e.g. 2 5 11 8 1 0)")],
+    ):
+    """Calculate the theta and phi angle for an .sdf file given a set of indices."""
 
-    parser.add_argument(
-        "-sdf", help="The .sdf file of your molecule (e.g. mol.sdf)"
-    )
-    parser.add_argument(
-        "-idx",
-        help="The ordered indices of your molecule (e.g. 2 5 11 8 1 0)",
-        type=int,
-        nargs="+",
-    )
+    orderparameter = Puckering(index=idx)
 
-    args = parser.parse_args(arguments)
-
-
-    orderparameter = Puckering(index=[i for i in args.idx])
-
-    subprocess.run(f"obabel -isdf {args.sdf} -oxyz -O .temp.xyz", shell=True)
+    subprocess.run(f"obabel -isdf {sdf} -oxyz -O .temp.xyz", shell=True)
     x = np.loadtxt(".temp.xyz", skiprows=2, usecols=[1, 2, 3])
     subprocess.run("rm .temp.xyz", shell=True)
 
