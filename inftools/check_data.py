@@ -53,7 +53,11 @@ def check_data(arguments):
             a[ens].axvline(L, c = 'k', lw=3)
             a[ens].axvline(M, c='k', lw=3)
             a[ens].scatter(op,x[path_nr, 0].astype(int))
-            a[ens].set(xlim=(L, max(max(op), M)), xlabel = 'maximum OP', ylabel = 'path nr. in infretis_data.txt', title = f"ensemble: {ens}, intf={M}")
+            if op.shape[0] > 0:
+                xlim_hi = max(max(op), M)
+            else:
+                xlim_hi = M
+            a[ens].set(xlim=(L, xlim_hi), xlabel = 'maximum OP', ylabel = 'path nr. in infretis_data.txt', title = f"ensemble: {ens}, intf={M}")
         #print(ens, op)
         if len(op)==0:
             print(f"Ensemble {ens} does not contain any paths.")
