@@ -37,24 +37,16 @@ def check_indices(
     print(f"\nTheta = {op[0]:.3f} degrees")
     print(f"Phi = {op[1]:.3f} degrees")
 
-def concatenate(arguments):
+def concatenate(
+        out: Annotated[str, typer.Option("-out", help="the outfile trajectory name (e.g. md-traj.xyz)")],
+        tpr: Annotated[str, typer.Option("-tpr", help="the .tpr file (e.g. ../gromacs_input/topol.tpr)")],
+        path: Annotated[str, typer.Option("-path", help="the filepath to the path_nr folder (e.g. run3/46/)")],
+    ):
+    "Reverse and concatenate trajectories from RETIS simulations."
     import MDAnalysis as mda
     from MDAnalysis.analysis.align import alignto
     from MDAnalysis.lib.mdamath import make_whole
-    parser = argparse.ArgumentParser(
-        description="Reverse and concatenate trajectories" +
-        " from RETIS simulations."
-    )
 
-    parser.add_argument(
-        "-out", help="the outfile trajectory name (e.g. md-traj.xyz)"
-    )
-    parser.add_argument(
-        "-tpr", help="the .tpr file (e.g. ../gromacs_input/topol.tpr)"
-    )
-    parser.add_argument(
-        "-path", help="the filepath to the path_nr folder (e.g. run3/46/)"
-    )
     # parser.add_argument(
     #     "--selection",
     #     help="The selection, e.g. 'index 1 2 3 4' or 'resname MOL0' \
@@ -62,18 +54,17 @@ def concatenate(arguments):
     #     default="resname MOL0",
     # )
 
-    args = parser.parse_args(arguments)
-    args.selection = "resname MOL0"
+    selection = "resname MOL0"
 
 
     traj_file_arr, index_arr = np.loadtxt(
-        f"{args.path}/traj.txt",
+        f"{path}/traj.txt",
         usecols=[1, 2],
         comments="#",
         dtype=str,
         unpack=True,
     )
-    traj_file_arr = [f"{args.path}/accepted/{traj_i}" \
+    traj_file_arr = [f"{path}/accepted/{traj_i}" \
             for traj_i in traj_file_arr]
     # traj_file_arr = np.char.replace(traj_file_arr,"trr","xtc")
     index_arr = index_arr.astype(int)
@@ -83,29 +74,29 @@ def concatenate(arguments):
     for traj_filename in traj_file_arr:
         if traj_filename.endswith(".g96"):
             traj_file_arr.remove(traj_filename)
-    ref = mda.Universe(args.tpr, traj_file_arr[0]).select_atoms(args.selection)
+    ref = mda.Universe(tpr, traj_file_arr[0]).select_atoms(selection)
     make_whole(ref.atoms)
     for traj_file in np.unique(traj_file_arr):
         print(f"Reading {traj_file} ...")
         subprocess.run(
             f"printf '1\n0\n' | gmx trjconv \
             -f {traj_file} -o tmp.{traj_file.split('/')[-1]} \
-            -pbc whole -center -s {args.tpr}",
+            -pbc whole -center -s {tpr}",
             shell=True,
         )
         if not os.path.exists(traj_file):
             exit(f"Could not find file {traj_file}.?")
 
         U[traj_file] = mda.Universe(
-                args.tpr, f"tmp.{traj_file.split('/')[-1]}"
+                tpr, f"tmp.{traj_file.split('/')[-1]}"
                 )
 
     with mda.Writer(
-        args.out, U[traj_file].select_atoms(args.selection).n_atoms
+        out, U[traj_file].select_atoms(selection).n_atoms
     ) as wfile:
         for traj_file, index in zip(traj_file_arr, index_arr):
             u = U[traj_file]
-            ag = u.select_atoms(args.selection)
+            ag = u.select_atoms(selection)
             make_whole(ag)
             u.trajectory[index]
             alignto(ag, ref)
@@ -114,25 +105,20 @@ def concatenate(arguments):
     for traj_file in np.unique(traj_file_arr):
         subprocess.run(f"rm tmp.{traj_file.split('/')[-1]}", shell=True)
 
-    subprocess.run(f"perl -pi -e 'chomp if eof' {args.out}", shell=True)
+    subprocess.run(f"perl -pi -e 'chomp if eof' {out}", shell=True)
 
     print("\nAll done!")
-    print(f"Trajectory written to {args.out}.")
+    print(f"Trajectory written to {out}.")
 
-def generate_openff_topology(arguments):
+def generate_openff_topology(
+        sdf: Annotated[str, typer.Option("-sdf", help="The .sdf file of your molecule (e.g. mol.sdf)")],
+    ):
+    """Generate an OpenFF topology for the puckering example."""
     from openff.interchange import Interchange
     from openff.toolkit import ForceField, Molecule
     from openff.units import unit
-    """Generate the openff topolgy for the system."""
     # load the molecule
-    parser = argparse.ArgumentParser(
-            description = "Generate an OpenFF topology for the puckering \
-                    example.")
-    parser.add_argument(
-        "-sdf", help="The .sdf file of your molecule (e.g. mol.sdf)"
-    )
-    args = parser.parse_args(arguments)
-    mol = Molecule.from_file(args.sdf)
+    mol = Molecule.from_file(sdf)
     topology = mol.to_topology()
     topology.box_vectors = unit.Quantity([2.1, 2.1, 2.1], unit.nanometer)
     # Load the OpenFF 2.1.0 forcefield called "Sage"
@@ -150,33 +136,20 @@ def generate_openff_topology(arguments):
                     writefile.write('#include "amber99.ff/tip3p.itp"\n\n')
                 writefile.write(line)
 
-def initial_path_from_iretis(arguments):
-    parser = argparse.ArgumentParser(
-        description="Generate initial paths for an infretis \
-                    simulation using paths from an earlier infretis \
-                    simulation"
-    )
-
-    parser.add_argument(
-        "-traj",
-        help="The path to the folder containing the trajectories\
-                (e.g. ../iretis0/trajs/)",
-    )
-    parser.add_argument(
-        "-toml",
-        help="The .toml input file for reading the interfaces\
-                (e.g. ../iretis0/infretis.toml)",
-    )
-    args = parser.parse_args(arguments)
+def initial_path_from_iretis(
+    traj: Annotated[str, typer.Option("-traj", help="The path to the folder containing the trajectories (e.g. ../iretis0/trajs/)")],
+    toml: Annotated[str, typer.Option("-toml", help="The .toml input file for reading the interfaces (e.g. 'infretis.toml')")],
+        ):
+    "Generate initial paths for an infretis simulation using paths from an earlier infretis simulation"
 
     # read interfaces from .toml file
-    with open(args.toml, "rb") as toml_file:
+    with open(toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
     interfaces = toml_dict["simulation"]["interfaces"][:-1]
 
     out = {}  # ensemble - traj_idx
 
-    trajs = glob.glob(f"{args.traj}/*")  # folder to trajectories
+    trajs = glob.glob(f"{traj}/*")  # folder to trajectories
     np.argsort([int(f.split("/")[-1]) for f in trajs])
     trajs = sorted(trajs, key=os.path.getctime)
 
@@ -229,20 +202,12 @@ def initial_path_from_iretis(arguments):
 
     print("\nAll done! Created folder load/ with new initial paths.")
 
-def initial_path_from_md(arguments):
-    parser = argparse.ArgumentParser(
-        description="Generate initial paths for an infretis \
-                    simulation from an equilibrium run."
-    )
-
-    parser.add_argument("-trr", help="The .trr trajectory file")
-    parser.add_argument(
-        "-order", help="The order file corresponding to the trajectory"
-    )
-    parser.add_argument("-toml",
-            help="The .toml input for reading the interfaces")
-
-    args = parser.parse_args(arguments)
+def initial_path_from_md(
+        trr: Annotated[str, typer.Option("-trr", help="The .trr trajectory file")],
+        toml: Annotated[str, typer.Option("-toml", help="The .toml input for reading the interfaces")],
+        order: Annotated[str, typer.Option("-order", help="The order file corresponding to the trajectory")],
+        ):
+    "Generate initial paths for an infretis simulation from an equilibrium run."
 
     predir = "load"
     if os.path.exists(predir):
@@ -254,15 +219,15 @@ def initial_path_from_md(arguments):
     else:
         os.mkdir(predir)
 
-    traj = args.trr  # trajectory  file
-    order = np.loadtxt(args.order)  # order file
+    traj = trr  # trajectory  file
+    order = np.loadtxt(order)  # order file
 
     # read interfaces from .toml file
-    with open(args.toml, "rb") as toml_file:
+    with open(toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
     interfaces = toml_dict["simulation"]["interfaces"]
     if len(interfaces) == 0:
-        print(f"\nNo interfaces defined in '{args.toml}'!")
+        print(f"\nNo interfaces defined in '{toml}'!")
         return
 
     for i in range(len(interfaces)):
@@ -364,43 +329,20 @@ def initial_path_from_md(arguments):
 
     print("\nAll done! Created folder load/ containing the initial paths.")
 
-def plot_order(arguments):
+def plot_order(
+        traj: Annotated[str, typer.Option("-traj", help="The path to the folder containing the trajectories (e.g. 'run1/load/')")],
+        toml: Annotated[str, typer.Option("-toml", help="The .toml input file for reading the interfaces (e.g. 'infretis.toml')")],
+        xy: Annotated[Tuple[int, int], typer.Option("-xy", help="The indices of the columns to plot (default 0 1)")] = (0, 1),
+    ):
+    "Plot the order parameter of all paths from an infretis simulation."
     import matplotlib.pyplot as plt
-    # Command line argument parser stuff
-    parser = argparse.ArgumentParser(
-        description="Plot the order parameter of all paths from an \
-                    infretis simulation."
-    )
-
-    parser.add_argument(
-        "-traj",
-        help="The path to the folder containing the trajectories\
-                (e.g. 'run1/load/')",
-    )
-    parser.add_argument(
-        "-toml",
-        help="The .toml input file for reading the interfaces\
-                (e.g. 'infretis.toml')",
-    )
-
-    parser.add_argument(
-        "-xy",
-        help="The indices of the columns to plot (default 0 1)",
-        default=[0, 1],
-        metavar=("x", "y"),
-        type=int,
-        nargs=2,
-    )
-
-    args = parser.parse_args(arguments)
-
     # read interfaces from the .toml file
-    with open(args.toml, "rb") as toml_file:
+    with open(toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
     interfaces = toml_dict["simulation"]["interfaces"]
 
     # get the filenames of all created paths
-    paths = glob.glob(f"{args.traj}/*/order.txt")
+    paths = glob.glob(f"{traj}/*/order.txt")
 
     # sort filenames by time of path creation
     sorted_paths = sorted(paths, key=os.path.getctime)
@@ -412,7 +354,7 @@ def plot_order(arguments):
     for interface in interfaces:
         a.axhline(interface, c="k", lw=0.5)
 
-    if 2 in args.xy:
+    if 2 in xy:
         lw = 0
 
     else:
@@ -428,8 +370,8 @@ def plot_order(arguments):
              )
         #    continue # continues to next iteration in loop
         a.plot(
-            x[:, args.xy[0]],
-            x[:, args.xy[1]],
+            x[:, xy[0]],
+            x[:, xy[1]],
             c="C0",
             marker="o",
             markersize=2.5,

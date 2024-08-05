@@ -4,19 +4,21 @@ import sys
 
 import typer
 
-from inftools.misc.bin_help import get_mapper
+from inftools.bin_help import get_mapper
+from inftools.analysis.wham import wham
 
 # define constants
 MOD_PATH = str(pathlib.Path(__file__).parent.resolve())
-FOLDERS = ["puckering_exercise"]
+FOLDERS = ["puckering_exercise", "tis_tools"]
 MAPPER = get_mapper(FOLDERS, MOD_PATH)
+
+# add individual functions
+MAPPER["wham"] = wham
 
 app = typer.Typer(
     no_args_is_help=True,
-    help="infretis CLI :monkey: :smile:",
-    epilog="katt",
+    help="infretis CLI",
     context_settings={"help_option_names": ["-h", "--help"]},
-    rich_markup_mode="rich",
 )
 
 # decorating imported mapper functions

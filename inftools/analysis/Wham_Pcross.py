@@ -2,8 +2,8 @@ import os
 
 import numpy as np
 
-from inftools.wham.rec_error import rec_block_errors
-from inftools.wham.toolsWHAM import PcrossWHAM2, get_WHAMfactors
+from inftools.analysis.rec_error import rec_block_errors
+from inftools.analysis.toolsWHAM import PcrossWHAM2, get_WHAMfactors
 
 
 def run_analysis(inp_dic):
