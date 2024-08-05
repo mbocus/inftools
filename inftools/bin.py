@@ -9,7 +9,7 @@ from inftools.analysis.wham import wham
 
 # define constants
 MOD_PATH = str(pathlib.Path(__file__).parent.resolve())
-FOLDERS = ["puckering_exercise", "tis_tools"]
+FOLDERS = ["exercises", "tis_tools"]
 MAPPER = get_mapper(FOLDERS, MOD_PATH)
 
 # add individual functions
