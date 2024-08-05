@@ -4,7 +4,7 @@ import sys
 
 import typer
 
-from inftools.bin_help import get_mapper
+from inftools.helper import get_mapper
 from inftools.analysis.wham import wham
 
 # define constants
