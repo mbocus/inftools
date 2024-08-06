@@ -29,6 +29,7 @@ def recalculate_order(
     * Read velocity information, and set vel_rev in config
     """
 
+    import os
     import numpy as np
     import tomli
 
@@ -36,6 +37,9 @@ def recalculate_order(
     from infretis.classes.engines.gromacs import read_trr_file
     from infretis.classes.orderparameter import create_orderparameter
     from infretis.classes.system import System
+
+    if os.path.exists(out):
+        raise FileExistsError(f"File {out} exists, aborting")
 
     with open(toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
