@@ -19,13 +19,13 @@ inft -h
 
 Current CLI capabilities is powered by the [Typer](https://typer.tiangolo.com/) python library.
 
-Any function `function_name` added to the folders [`inftools/exercises`](`inftools/exercises`) and [`inftools/tistools`](`inftools/tistools`) will automatically be callable via the terminal as
+Any function `function_name` added to the folders [`inftools/exercises`](inftools/exercises) and [`inftools/tistools`](inftools/tistools) will automatically be callable via the terminal as
 
 ```bash
 inft function_name -args1 var1 -args2 var2
 ```
 
-The function should have the following structure:
+The `function_name` function should have the following structure:
 
 ```python3
 from typing import Annotated
@@ -39,7 +39,7 @@ def function_name(
     """
 ```
 
-Individual functions can also be added to the CLI library by including them in [`inftools/bin.py`], as done for the wham function in the [`inftools/analysis`](`inftools/analysis`) folder:
+Individual functions can also be added to the CLI library by including them in [`inftools/bin.py`](inftools/bin.py), as done for the wham function in the [`inftools/analysis`](inftools/analysis) folder:
 
 ```python3
 from inftools.analysis.wham import wham
