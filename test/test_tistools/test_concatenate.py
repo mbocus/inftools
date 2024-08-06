@@ -2,7 +2,6 @@ import os
 import shutil
 
 from inftools.tistools.concatenate import concatenate_xyz
-from infretis.classes.engines.cp2k import read_xyz_file
 
 def read_xyz(inp):
     cnt = 0
