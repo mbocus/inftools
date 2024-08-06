@@ -1,5 +1,5 @@
 # &infin;tools 🧰
-👷‍♂️ Work in progress python package that provide various AIRETIS tools for tasks like setting up simulations and analyzing data. 📈
+👷‍♂️ Work in progress python package that provide various &infin;RETIS tools for tasks like setting up simulations and analyzing data. 📈
 
 🤝 Contributions of tools and modifications are welcome – feel free to submit your enhancements! 🚀
 ## Installation 
