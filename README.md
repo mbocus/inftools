@@ -28,7 +28,7 @@ from typing import Annotated
 
 def function_name(
     args1: Annotated[str, typer.Option("-args1", help="var1")],
-    args2: Annotated[str, typer.Option("-args2", help="var2")],
+    args2: Annotated[int, typer.Option("-args2", help="var2")],
     ):
     """
     Function description
@@ -61,4 +61,4 @@ The tests included in the [`inftools/test`](inftools/) folder can be ran by runn
 pytest
 ```
 
-
+We currently do not have a testing policy but please do include tests for the included CLI functions for higher coverage.
