@@ -12,9 +12,9 @@ class Format(str, Enum):
     THR = "traj"
 
 def recalculate_order(
-    toml: Annotated[str, typer.Option("-toml", help=".toml file to read nr. of ensembles")] = "inretis.toml",
-    log: Annotated[str, typer.Option("-log", help="the .log file to read path numbers")] = "sim.log",
-    out: Annotated[bool, typer.Option("-out", help="the output of the analysis")]= False,
+    toml: Annotated[str, typer.Option("-toml")] = "infretis.toml",
+    log: Annotated[str, typer.Option("-log")] = "sim.log",
+    out: Annotated[bool, typer.Option("-out", help="the output of the analysis")] = False,
     format: Annotated[Format, typer.Option("-format", case_sensitive=False, help="the file format of the trajectory (.traj is ase format)")] = Format.ONE,
     box: Annotated[Tuple[int, int, int], typer.Option("-box", help="xyz only; box dimensions in angstrom (e.g. 30 30 30)")] = None,
     ):
