@@ -1,0 +1,477 @@
+[INFO]: =============================
+[INFO]: Logging file for worker 3
+[INFO]: =============================
+
+[CRITICAL]: The section engine requires an input_path entry
+[WARNING]: Set box low values: [-inf]
+[WARNING]: Set box high values: [inf]
+[INFO]: Created engine "TurtleMD internal engine" from settings.
+[CRITICAL]: The section engine requires an input_path entry
+[WARNING]: Set box low values: [-inf]
+[WARNING]: Set box high values: [inf]
+[INFO]: Created engine "TurtleMD internal engine" from settings.
+[CRITICAL]: The section engine requires an input_path entry
+[WARNING]: Set box low values: [-inf]
+[WARNING]: Set box high values: [inf]
+[INFO]: Created engine "TurtleMD internal engine" from settings.
+[CRITICAL]: The section engine requires an input_path entry
+[WARNING]: Set box low values: [-inf]
+[WARNING]: Set box high values: [inf]
+[INFO]: Created engine "TurtleMD internal engine" from settings.
+[INFO]: starting wf in 007 with path_n 7
+[INFO]: Shooting from order parameter/index: 0.536000, 5
+[INFO]: Jump 0, len 65, statusNCR, intf: R R
+[INFO]: Shooting from order parameter/index: 0.021000, 2
+[INFO]: Jump 1, len 78, statusACC, intf: R L
+[INFO]: Shooting from order parameter/index: 0.898454, 3
+[INFO]: Jump 2, len 50, statusNCR, intf: R R
+[INFO]: Shooting from order parameter/index: -0.047823, 55
+[INFO]: Jump 3, len 95, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 007 with path_n 13
+[INFO]: Shooting from order parameter/index: -0.124994, 14
+[INFO]: Jump 0, len 61, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.190108, 50
+[INFO]: Jump 1, len 34, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.215552, 24
+[INFO]: Jump 2, len 38, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.236576, 10
+[INFO]: Jump 3, len 38, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 2
+[INFO]: Shooting from order parameter/index: -0.664000, 1
+[INFO]: Jump 0, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.641632, 27
+[INFO]: Jump 1, len 25, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.670151, 5
+[INFO]: Jump 2, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.638367, 17
+[INFO]: Jump 3, len 32, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 19
+[INFO]: Shooting from order parameter/index: -0.545917, 6
+[INFO]: Jump 0, len 21, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.549910, 13
+[INFO]: Jump 1, len 35, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.550564, 29
+[INFO]: Jump 2, len 28, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.554702, 8
+[INFO]: Jump 3, len 26, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 27
+[INFO]: Shooting from order parameter/index: -0.582686, 2
+[INFO]: Jump 0, len 17, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.576972, 7
+[INFO]: Jump 1, len 27, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.530424, 15
+[INFO]: Jump 2, len 32, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.583807, 29
+[INFO]: Jump 3, len 31, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 29
+[INFO]: Shooting from order parameter/index: -0.698723, 6
+[INFO]: Jump 0, len 5, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.698990, 1
+[INFO]: Jump 1, len 19, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.673265, 8
+[INFO]: Jump 2, len 31, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.644592, 6
+[INFO]: Jump 3, len 27, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting sh in 001 with path_n 33
+[INFO]: Shooting from order parameter/index: -0.968258, 61
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 35
+[INFO]: Shooting from order parameter/index: -0.629494, 15
+[INFO]: Jump 0, len 23, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.625922, 8
+[INFO]: Jump 1, len 34, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.658375, 6
+[INFO]: Jump 2, len 22, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.676792, 17
+[INFO]: Jump 3, len 18, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 005 with path_n 34
+[INFO]: Shooting from order parameter/index: -0.431646, 9
+[INFO]: Jump 0, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.430831, 9
+[INFO]: Jump 1, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.465073, 22
+[INFO]: Jump 2, len 30, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.446642, 9
+[INFO]: Jump 3, len 27, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 005 with path_n 47
+[INFO]: Shooting from order parameter/index: -0.437886, 10
+[INFO]: Jump 0, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.457298, 20
+[INFO]: Jump 1, len 30, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.442566, 21
+[INFO]: Jump 2, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.491630, 1
+[INFO]: Jump 3, len 26, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 002 with path_n 43
+[INFO]: Shooting from order parameter/index: -0.721183, 32
+[INFO]: Jump 0, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.714511, 20
+[INFO]: Jump 1, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.702334, 8
+[INFO]: Jump 2, len 34, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.686879, 19
+[INFO]: Jump 3, len 34, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 002 with path_n 45
+[INFO]: Shooting from order parameter/index: -0.498292, 29
+[INFO]: Jump 0, len 69, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.373329, 38
+[INFO]: Jump 1, len 66, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.647732, 58
+[INFO]: Jump 2, len 45, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.697151, 8
+[INFO]: Jump 3, len 41, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 002 with path_n 60
+[INFO]: Shooting from order parameter/index: -0.658324, 27
+[INFO]: Jump 0, len 42, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.615415, 28
+[INFO]: Jump 1, len 42, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.667999, 33
+[INFO]: Jump 2, len 38, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.718549, 30
+[INFO]: Jump 3, len 31, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 002 with path_n 64
+[INFO]: Shooting from order parameter/index: -0.770426, 27
+[INFO]: Jump 0, len 24, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.744487, 9
+[INFO]: Jump 1, len 30, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.738189, 16
+[INFO]: Jump 2, len 36, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.762692, 30
+[INFO]: Jump 3, len 40, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 006 with path_n 66
+[INFO]: Shooting from order parameter/index: -0.399894, 9
+[INFO]: Jump 0, len 7, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.399894, 5
+[INFO]: Jump 1, len 15, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.399894, 1
+[INFO]: Jump 2, len 20, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.358428, 7
+[INFO]: Jump 3, len 18, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 007 with path_n 67
+[INFO]: Shooting from order parameter/index: -0.255924, 6
+[INFO]: Jump 0, len 56, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.272623, 3
+[INFO]: Jump 1, len 61, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.155687, 26
+[INFO]: Jump 2, len 92, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.167212, 16
+[INFO]: Jump 3, len 73, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 007 with path_n 77
+[INFO]: Shooting from order parameter/index: -0.115523, 33
+[INFO]: Jump 0, len 57, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.164711, 14
+[INFO]: Jump 1, len 66, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.090135, 44
+[INFO]: Jump 2, len 66, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.187859, 57
+[INFO]: Jump 3, len 84, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 70
+[INFO]: Shooting from order parameter/index: -0.649404, 21
+[INFO]: Jump 0, len 22, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.684589, 2
+[INFO]: Jump 1, len 22, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.680105, 4
+[INFO]: Jump 2, len 20, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.692328, 2
+[INFO]: Jump 3, len 12, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting sh in 001 with path_n 86
+[INFO]: Shooting from order parameter/index: -0.977250, 35
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 89
+[INFO]: Shooting from order parameter/index: -0.590470, 3
+[INFO]: Jump 0, len 16, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.573043, 10
+[INFO]: Jump 1, len 20, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.568068, 10
+[INFO]: Jump 2, len 21, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.584096, 17
+[INFO]: Jump 3, len 14, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting sh in 001 with path_n 91
+[INFO]: Shooting from order parameter/index: -0.982367, 22
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 006 with path_n 93
+[INFO]: Shooting from order parameter/index: -0.344829, 18
+[INFO]: Jump 0, len 31, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.307440, 12
+[INFO]: Jump 1, len 32, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.355514, 5
+[INFO]: Jump 2, len 44, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.269452, 22
+[INFO]: Jump 3, len 41, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 100
+[INFO]: Shooting from order parameter/index: -0.530971, 16
+[INFO]: Jump 0, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.574859, 3
+[INFO]: Jump 1, len 22, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.552948, 9
+[INFO]: Jump 2, len 21, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.552948, 7
+[INFO]: Jump 3, len 23, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 006 with path_n 101
+[INFO]: Shooting from order parameter/index: -0.191523, 15
+[INFO]: Jump 0, len 57, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.346764, 51
+[INFO]: Jump 1, len 40, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.337417, 32
+[INFO]: Jump 2, len 47, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.271182, 22
+[INFO]: Jump 3, len 48, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting sh in 001 with path_n 112
+[INFO]: Shooting from order parameter/index: -0.929512, 22
+[INFO]: Move was True with status ACC
+
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 118
+[INFO]: Shooting from order parameter/index: -0.687823, 6
+[INFO]: Jump 0, len 13, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.690234, 10
+[INFO]: Jump 1, len 19, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.696280, 17
+[INFO]: Jump 2, len 10, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.694856, 7
+[INFO]: Jump 3, len 7, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 114
+[INFO]: Shooting from order parameter/index: -0.587434, 4
+[INFO]: Jump 0, len 28, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.587850, 26
+[INFO]: Jump 1, len 25, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.576848, 20
+[INFO]: Jump 2, len 21, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.572339, 3
+[INFO]: Jump 3, len 28, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting sh in 000 with path_n 125
+[INFO]: Shooting from order parameter/index: -1.128152, 21
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 128
+[INFO]: Shooting from order parameter/index: -0.578900, 19
+[INFO]: Jump 0, len 20, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.563407, 12
+[INFO]: Jump 1, len 19, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.562639, 9
+[INFO]: Jump 2, len 19, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.570247, 4
+[INFO]: Jump 3, len 17, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 002 with path_n 136
+[INFO]: Shooting from order parameter/index: -0.713891, 20
+[INFO]: Jump 0, len 34, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.721984, 9
+[INFO]: Jump 1, len 30, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.731703, 18
+[INFO]: Jump 2, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.657845, 17
+[INFO]: Jump 3, len 39, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 006 with path_n 139
+[INFO]: Shooting from order parameter/index: -0.395716, 14
+[INFO]: Jump 0, len 8, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.392970, 4
+[INFO]: Jump 1, len 36, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.330779, 25
+[INFO]: Jump 2, len 28, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.384708, 25
+[INFO]: Jump 3, len 36, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 145
+[INFO]: Shooting from order parameter/index: -0.621911, 19
+[INFO]: Jump 0, len 39, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.583537, 19
+[INFO]: Jump 1, len 36, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.689482, 1
+[INFO]: Jump 2, len 11, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.695094, 2
+[INFO]: Jump 3, len 32, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 147
+[INFO]: Shooting from order parameter/index: -0.531039, 13
+[INFO]: Jump 0, len 32, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.536316, 24
+[INFO]: Jump 1, len 24, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.540145, 8
+[INFO]: Jump 2, len 39, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.510732, 5
+[INFO]: Jump 3, len 33, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 149
+[INFO]: Shooting from order parameter/index: -0.659214, 4
+[INFO]: Jump 0, len 19, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.679167, 4
+[INFO]: Jump 1, len 18, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.668540, 6
+[INFO]: Jump 2, len 45, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.540257, 30
+[INFO]: Jump 3, len 43, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 007 with path_n 158
+[INFO]: Shooting from order parameter/index: -0.245500, 14
+[INFO]: Jump 0, len 38, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.232547, 26
+[INFO]: Jump 1, len 36, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.276145, 30
+[INFO]: Jump 2, len 23, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.281553, 17
+[INFO]: Jump 3, len 62, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 005 with path_n 159
+[INFO]: Shooting from order parameter/index: -0.476549, 11
+[INFO]: Jump 0, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.497965, 24
+[INFO]: Jump 1, len 8, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.494708, 4
+[INFO]: Jump 2, len 11, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.488048, 3
+[INFO]: Jump 3, len 15, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 004 with path_n 163
+[INFO]: Shooting from order parameter/index: -0.527178, 20
+[INFO]: Jump 0, len 24, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.528313, 13
+[INFO]: Jump 1, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.529018, 11
+[INFO]: Jump 2, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.511809, 12
+[INFO]: Jump 3, len 38, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting sh in 001 with path_n 173
+[INFO]: Shooting from order parameter/index: -0.912272, 28
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 007 with path_n 177
+[INFO]: Shooting from order parameter/index: -0.017149, 35
+[INFO]: Jump 0, len 116, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.191596, 11
+[INFO]: Jump 1, len 102, statusACC, intf: R L
+[INFO]: Shooting from order parameter/index: 0.073664, 59
+[INFO]: Jump 2, len 145, statusNCR, intf: R R
+[INFO]: Shooting from order parameter/index: 0.018927, 69
+[INFO]: Jump 3, len 127, statusACC, intf: L R
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 002 with path_n 179
+[INFO]: Shooting from order parameter/index: -0.781666, 4
+[INFO]: Jump 0, len 33, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.745183, 8
+[INFO]: Jump 1, len 27, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.740951, 8
+[INFO]: Jump 2, len 34, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.715057, 15
+[INFO]: Jump 3, len 35, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 005 with path_n 186
+[INFO]: Shooting from order parameter/index: -0.457371, 4
+[INFO]: Jump 0, len 21, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.461352, 6
+[INFO]: Jump 1, len 36, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.411381, 16
+[INFO]: Jump 2, len 51, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.395171, 13
+[INFO]: Jump 3, len 49, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 006 with path_n 185
+[INFO]: Shooting from order parameter/index: 0.014806, 65
+[INFO]: Jump 0, len 130, statusACC, intf: R L
+[INFO]: Shooting from order parameter/index: 0.871171, 5
+[INFO]: Jump 1, len 47, statusNCR, intf: R R
+[INFO]: Shooting from order parameter/index: 0.132421, 49
+[INFO]: Jump 2, len 134, statusNCR, intf: R R
+[INFO]: Shooting from order parameter/index: 0.954355, 2
+[INFO]: Jump 3, len 35, statusNCR, intf: R R
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 005 with path_n 193
+[INFO]: Shooting from order parameter/index: -0.478608, 15
+[INFO]: Jump 0, len 23, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.459678, 7
+[INFO]: Jump 1, len 28, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.447231, 7
+[INFO]: Jump 2, len 26, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.489784, 23
+[INFO]: Jump 3, len 12, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 201
+[INFO]: Shooting from order parameter/index: -0.621928, 12
+[INFO]: Jump 0, len 37, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.621928, 31
+[INFO]: Jump 1, len 39, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.681503, 36
+[INFO]: Jump 2, len 14, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.691464, 2
+[INFO]: Jump 3, len 12, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
+[INFO]: starting wf in 003 with path_n 207
+[INFO]: Shooting from order parameter/index: -0.688091, 6
+[INFO]: Jump 0, len 13, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.691739, 3
+[INFO]: Jump 1, len 14, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.694812, 2
+[INFO]: Jump 2, len 16, statusACC, intf: L L
+[INFO]: Shooting from order parameter/index: -0.689176, 10
+[INFO]: Jump 3, len 17, statusACC, intf: L L
+[INFO]: Move was True with status ACC
+
