@@ -17,7 +17,7 @@ MAPPER["wham"] = wham
 
 app = typer.Typer(
     no_args_is_help=True,
-    help="infretis CLI",
+    help="inftools CLI",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 
