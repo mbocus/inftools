@@ -1,5 +1,4 @@
-from typing import Annotated, List
-from enum import Enum
+from typing import Annotated
 import typer
 
 # Disable automatic underscore -> hyphen in CLI names
@@ -27,21 +26,9 @@ def calc_flow(
     """
     import numpy as np
     import tomli
-    import argparse
     import matplotlib.pyplot as plt
 
     plot = [int(i) for i in plot.split(' ')]
-    # parser = argparse.ArgumentParser(
-    #     description=calc_flow.__doc__)
-    # parser.add_argument("-toml", default = "infretis.toml",
-    #         help = ".toml file to read nr. of ensembles")
-    # parser.add_argument("-log", default="sim.log",
-    #         help = "the .log file to read path numbers")
-    # parser.add_argument("-out", default=False,
-    #         help = "the output of the analysis")
-    # parser.add_argument("-plot", nargs='*',
-    #         help = "if integers, plot the flow for those paths, if 'all' plot flow for all paths")
-    # args = parser.parse_args(arguments)
 
     with open(toml, "rb") as toml_file:
         config = tomli.load(toml_file)

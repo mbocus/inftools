@@ -1,22 +1,21 @@
-def check_data(arguments):
+from typing import Annotated
+import typer
+
+def check_data(
+    data: Annotated[str, typer.Option("-data")] = "infretis_data.txt",
+    toml: Annotated[str, typer.Option("-toml")] = "infretis.toml",
+    plot: Annotated[bool, typer.Option("-plot")] = False,
+    ):
+    """Check that all ensembles [i] contain paths that cross the interface of the next ensemble [i+1]. Can be used to plot the maximum OP value of all paths within each ensemble."""
     import numpy as np
     import matplotlib.pyplot as plt
     import tomli
-    import argparse
 
-    parser = argparse.ArgumentParser(description = """Check that all ensembles [i] contain paths
-    that cross the interface of the next ensemble [i+1]. Can be used to plot the maximum OP value of all paths within each ensemble.""")
-    parser.add_argument("-data", default = "infretis_data.txt", help = "the infretis_data.txt file")
-    parser.add_argument("-toml", default = "infretis.toml", help = "the .toml file, used to read interfaces")
-    parser.add_argument("--plot", default = False, action=argparse.BooleanOptionalAction, help = "plot the max OP for all paths in all ensembles")
-
-    args = parser.parse_args(arguments)
-
-    with open(args.toml, "rb") as toml_file:
+    with open(toml, "rb") as toml_file:
         toml_dict = tomli.load(toml_file)
 
     interfaces = toml_dict["simulation"]["interfaces"][:]
-    x = np.loadtxt(args.data, dtype = str)
+    x = np.loadtxt(data, dtype = str)
 
     N_ens = len(interfaces)
 
@@ -32,7 +31,7 @@ def check_data(arguments):
 
         OP_matrix[i, idx[0]] = xi[2].astype(float)
 
-    if args.plot:
+    if plot:
         f,a = plt.subplots(1, N_ens, sharey = True)
 
     for ens in range(N_ens):
@@ -49,7 +48,7 @@ def check_data(arguments):
         # max OP value of all paths in ensemble ens
         op = OP_matrix[:,ens][path_nr]
 
-        if args.plot:
+        if plot:
             a[ens].axvline(L, c = 'k', lw=3)
             a[ens].axvline(M, c='k', lw=3)
             a[ens].scatter(op,x[path_nr, 0].astype(int))
@@ -64,5 +63,5 @@ def check_data(arguments):
         elif ens > 0 and max(op) < M:
             print(f"Ensemble {ens} is missing paths that cross interface {ens_intf+1} with value {M}")
 
-    if args.plot:
+    if plot:
         plt.show()

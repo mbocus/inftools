@@ -1,8 +1,19 @@
-def generate_zero_paths(arguments):
-    import argparse
+from typing import Annotated
+import typer
+
+def generate_zero_paths(
+    conf: Annotated[str, typer.Option("-conf", help="The name (not the path) of the initial configuration to propagate from. inftools will look in the input folder specified in the .toml file.")],
+    maxlen: Annotated[int, typer.Option("-maxlen", help="")],
+    toml: Annotated[str, typer.Option("-toml",)] = "infretis.toml",
+    ):
+    """Generate initial paths for the [0-] and [0+]
+
+    ensembles by propagating a single configuration forward
+    and backward in time until it crosses the lambda0 interface.
+    These can be used to e.g. push the system up the barrier using
+    multiple infRETIS simulations."""
     import os
     import pathlib
-    import shutil
     import numpy as np
     from infretis.classes.engines.factory import create_engines
     from infretis.classes.orderparameter import create_orderparameters
@@ -10,22 +21,6 @@ def generate_zero_paths(arguments):
     from infretis.classes.repex import REPEX_state
     from infretis.classes.system import System
     from infretis.setup import setup_config
-    parser = argparse.ArgumentParser(
-        description="Generate initial paths for the [0-] and [0+] \
-                ensembles by propagating a single configuration forward \
-                and backward in time until it crosses the lambda0 interface.\
-                These can be used to e.g. push the system up the barrier using \
-                multiple infRETIS simulations."
-    )
-
-    parser.add_argument("-toml", help = "The .toml file")
-    parser.add_argument("-conf",
-        help = "The name (not the path) of the initial configuration to \
-                propagate from. inftools will look in the input folder\
-                specified in the .toml file.")
-    parser.add_argument("-maxlen", help = "The maximum allowed path length", type = int)
-
-    args = parser.parse_args(arguments)
 
     # make a directory we work from
     tmp_dir = pathlib.Path("temporary_load/")
@@ -33,13 +28,13 @@ def generate_zero_paths(arguments):
     load_dir = pathlib.Path("load/")
     load_dir.mkdir(exist_ok = False)
 
-    initial_configuration = args.conf
+    initial_configuration = conf
 
     # maximal length of initial paths
-    maxlen = args.maxlen
+    # maxlen = maxlen
 
     # infretis parameters
-    config = setup_config(args.toml)
+    config = setup_config(toml)
     state = REPEX_state(config, minus=True)
 
     # setup ensembles

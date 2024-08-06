@@ -1,7 +1,22 @@
-def estimate_interfaces(arguments):
+from typing import Annotated
+import typer
+
+def estimate_interfaces(
+    i: Annotated[str, typer.Option("-i", help="The Pcross.txt file")],
+    num: Annotated[int, typer.Option("-num", help="Number of interfaces")],
+    order: Annotated[int, typer.Option("-order", help="Polynomial order")],
+    i0: Annotated[float, typer.Option("-i0", help="Position of the first interface")] = None,
+    iN: Annotated[float, typer.Option("-iN", help="Position of the last interface")] = None,
+    plot: Annotated[bool, typer.Option("-plot", help="Time from nskip")] = False,
+
+    ):
     """
+    Estimate interfaces from Pcross.txt
+
     A simple script to recaluclate the interface positions
-    from an existing crossing proability file. A polynomial of
+    from an existing crossing proability file.
+
+    A polynomial of
     order <order> is fit in a semi-log plot.
     The first <i0> and last <iN> interface postions are set by the user,
     as well as the number of interfaces <N>.
@@ -12,35 +27,18 @@ def estimate_interfaces(arguments):
     import matplotlib.pyplot as plt
     import numpy as np
     from scipy.optimize import curve_fit, minimize
-    import argparse
+    x = np.loadtxt(i)
 
-    parser = argparse.ArgumentParser(
-        description="Estimate interfaces from Pcross.txt"
-    )
-    parser.add_argument("-i", help="The Pcross.txt file")
-    parser.add_argument("-num", type=int, help="Number of interfaces")
-    parser.add_argument("-order", type=int, required=False, help="Polynomial order",
-            default = 5)
-    parser.add_argument("-i0", default = "intf0",
-                        help = "Position of the first interface")
-    parser.add_argument("-iN", default = "intfN",
-                        help = "Position of the last interface")
-    parser.add_argument("-plot", action="store_true", help="Plot")
-
-    args = parser.parse_args(arguments)
-
-    x = np.loadtxt(args.i)
-
-    if args.i0 == "intf0":
+    if i0 is None:
         i0 = x[0, 0]  # set first interface
     else:
-        i0 = float(args.i0)
+        i0 = float(i0)
 
-    if args.iN == "intfN":
+    if iN is None:
         iN = float(x[-1, 0])  # set last interface
     else:
-        iN = float(args.iN)
-    N = args.num  # number of interfaces
+        iN = float(iN)
+    N = num  # number of interfaces
     alpha = 0  # hyperparameter to penalize positive derivative of pcross, e.g. 50
 
     last_idx = np.where(x[:, 0] <= iN)[0][-1]
@@ -104,7 +102,7 @@ def estimate_interfaces(arguments):
         return np.sqrt(np.sum((y - y_fit) ** 2)) + alpha * np.sum(dy[idx])
 
     # some initial guess of parameters
-    popt, pcov = curve_fit(fnc, x_fit, y_fit, p0=np.ones(args.order))
+    popt, pcov = curve_fit(fnc, x_fit, y_fit, p0=np.ones(order))
 
     # actual optimization with penalizing derivatives
     res = minimize(of, popt, args=(x_fit, y_fit, f0, alpha), method="Nelder-mead")
@@ -138,7 +136,7 @@ def estimate_interfaces(arguments):
     interfaces = np.round(np.array(interfaces), 9)
     print("interfaces = [", ", ".join([f"{itf:.04f}" for itf in interfaces]) + "]")
 
-    if args.plot:
+    if plot:
         f, a = plt.subplots(figsize=(8, 4))
         a.plot(x[:, 0], x[:, 1], marker="o", markersize=3)
         a.plot(x_plot, y_plot*y0)

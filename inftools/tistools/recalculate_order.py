@@ -1,4 +1,4 @@
-from typing import Annotated, Tuple 
+from typing import Annotated, Tuple
 from enum import Enum
 import typer
 

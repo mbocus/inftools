@@ -11,7 +11,6 @@ def concatenate_xyz(
     import numpy as np
     import MDAnalysis as mda
     import os
-    import argparse
     from ase.io.trajectory import Trajectory
     from ase.io import write
 

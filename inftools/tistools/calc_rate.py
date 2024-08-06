@@ -1,31 +1,27 @@
-from os import walk
+from typing import Annotated
+import typer
+
 import matplotlib.pyplot as plt
 import numpy as np
 
-from inftools.plotting.max_op import infretis_data_reader
+# from inftools.plotting.max_op import infretis_data_reader
 
-def calc_rate(arguments):
-    import argparse
+def calc_rate(
+    dt: Annotated[float, typer.Option("-dt", help="Timestep")],
+    sc: Annotated[int, typer.Option("-sc", help="Subcycle")],
+    unit: Annotated[str, typer.Option("-unit", help="cp2k: 'fs', gromacs: 'ps'")],
+    plot: Annotated[float, typer.Option("-plot", help="specific value(s) vs runavg, in s-1.")] = None,
+    wham: Annotated[str, typer.Option("-wham", help="The wham folder")] = "wham",
+        ):
+    """Calculates the rate with correct units. Currently unfinished."""
+    run_rate = np.loadtxt(wham + '/runav_rate.txt')
+    run_flux = np.loadtxt(wham + '/runav_flux.txt')
+    run_pcro = np.loadtxt(wham + '/runav_Pcross.txt')
 
-    parser = argparse.ArgumentParser(
-        description="Estimate interfaces from Pcross.txt"
-    )
-    parser.add_argument("-wham", help="The wham folder")
-    parser.add_argument("-dt", type=float, help="timestep")
-    parser.add_argument("-sc", type=float, help="subcycle")
-    parser.add_argument("-unit", help="defaults: cp2k: 'fs', gromacs: 'ps'")
-    parser.add_argument("-plot", help="specific value(s) vs runavg, in s-1.", nargs="+",)
-
-    args = parser.parse_args(arguments)
-
-    run_rate = np.loadtxt(args.wham + '/runav_rate.txt')
-    run_flux = np.loadtxt(args.wham + '/runav_flux.txt')
-    run_pcro = np.loadtxt(args.wham + '/runav_Pcross.txt')
-
-    run_rate[:, 3] = run_rate[:, 3]/(args.dt*args.sc)
-    run_flux[:, 2] = run_flux[:, 2]/(args.dt*args.sc)
-    print('calculated rate:', f'{run_rate[-1, 3]:.3e}', f"{args.unit}^-1")
-    if args.unit == 'fs':
+    run_rate[:, 3] = run_rate[:, 3]/(dt*sc)
+    run_flux[:, 2] = run_flux[:, 2]/(dt*sc)
+    print('calculated rate:', f'{run_rate[-1, 3]:.3e}', f"{unit}^-1")
+    if unit == 'fs':
         run_rate[:, 3] = run_rate[:, 3]*10**(15)
         run_flux[:, 2] = run_flux[:, 2]*10**(15)
         print('calculated rate:', f'{run_rate[-1, 3]:.3e}', "s^-1")
@@ -35,129 +31,45 @@ def calc_rate(arguments):
 
         print(run_rate[-1, 3], "s^-1")
 
-    if args.plot:
+    if plot:
         import scienceplots
         plt.style.use(["science"])
         plt.plot(run_rate[:, 0], run_rate[:, 3], label=r'$\infty$RETIS',
                  color='#1f77b4', linewidth=2.0)
-        for i in args.plot:
+        if plot is not None:
             minval = min(run_rate[-1, 3], float(i))
             maxval = max(run_rate[-1, 3], float(i))
-            print(i, "s^-1", ', difference, a factor of:', maxval/minval)
+            print(plot, "s^-1", ', difference, a factor of:', maxval/minval)
             plt.axhline(float(i), color='k', label='Experimental', linewidth=2.0)
         plt.legend(frameon=False)
         plt.yscale('log')
         plt.xlabel('Number of accepted paths')
         plt.ylabel(r'Rate constant [s$^{-1}$]')
         plt.savefig('co2_rate.pdf')
-        # plt.show()
 
-
-
-def calc_ensdata(arguments):
-    import argparse
-    import tomli
-
-    parser = argparse.ArgumentParser(
-        description="Estimate interfaces from Pcross.txt"
-    )
-    parser.add_argument("-data", help="The infretis_data.txt file", default='infretis_data.txt')
-    parser.add_argument("-plot", action="store_true", help="Plot")
-    parser.add_argument(
-        "-toml", help="The .toml input file defining the orderparameter", default='infretis.toml'
-    )
-
-    args = parser.parse_args(arguments)
-    with open(args.toml, "rb") as toml_file:
-        toml_dict = tomli.load(toml_file)
-    interfaces = toml_dict["simulation"]["interfaces"]
-
-    # dic, ens_dic = read_infdata(args.data)
-    ens_dic2 = infretis_data_reader(args.data)
-    # keysa = list(sorted(ens_dic.keys()))
-    # keysb = list(sorted(ens_dic2.keys()))
-    # print('gori a', ens_dic.keys())
-    # print('gori b', ens_dic2.keys())
-    # for keya, keyb in zip(keysa, keysb):
-    #     print(keya, keyb)
-    #     print(len(ens_dic[keya]))
-    #     print(len(ens_dic2[keyb]['haw']))
-    # exit('uhuh')
-    enss = sorted(ens_dic2.keys())
-    num = [len(i['op']) for i in ens_dic2.values()]
-    # for intf, num0 in zip(interfaces[:-1], num[1:]):
-    #     print(intf, num0)
-
-    # for idx, ens in enumerate(ens_dic.values()):
-    pcross = 1.
-    pcrosses = []
-    for ens in enss:
-        # skip zero minus ensemble
-        data = ens_dic2[ens]
-        if ens == 0:
-            # print(data)
-            # exit('uhuh')
-            continue
-        avg_up = 0
-        avg_dw = 0
-        for op, haw, w in zip(data['op'], data['haw'], data['w']):
-            if op > interfaces[ens]:
-                avg_up += 1*w/haw
-            avg_dw += w/haw
-
-        # plt.scatter(list(range(len([i[2] for i in data]))), [i[2] for i in data])
-        # plt.axhline(interfaces[idx-1], color='C0')
-        # plt.axhline(interfaces[idx], color='C1')
-        # plt.show()
-        # print([i[2] for i in data])
-        # print(pn[-1], pn[2] > interfaces[idx+1], interfaces[idx+1])
-        # exit('noouh')
-        print(ens, avg_up, avg_dw)
-        print('whada', avg_up/avg_dw)
-        pcross *= avg_up/avg_dw
-        pcrosses.append(avg_up/avg_dw)
-    print('blud', pcross, len(pcrosses))
-    # exit('uz')
-        # exit('noouh')
-
-
-        # print('a', ens)
-
-    print('whad', pcrosses)
-    if args.plot:
-        plt.scatter(interfaces[:-1], num[1:],)
-        plt.plot(interfaces[:-1], num[1:],)
-        plt.show()
-    for intf, num0, pc in zip(interfaces[:-1], num[1:], pcrosses):
-        print(intf, num0, pc)
-
-def get_time(arguments):
-    import argparse
+def get_time(
+    log: Annotated[str, typer.Option("-log", help="The sim.log file")] = "sim.log",
+    data: Annotated[str, typer.Option("-data", help="The infretis_data.txt file")] = "infretis_data.txt",
+    nskip: Annotated[int, typer.Option("-nskip", help="Time from nskip")] = 0,
+    plot: Annotated[bool, typer.Option("-plot", help="Time from nskip")] = False,
+        ):
+    """Calculates the time taken per path. Currently unfinished."""
     from datetime import datetime
 
-    parser = argparse.ArgumentParser(
-        description="Estimate interfaces from Pcross.txt"
-    )
-    parser.add_argument("-i", help="The log file", default='sim.log')
-    parser.add_argument("-data", help="The infretis_data.txt file", default='infretis_data.txt')
-    parser.add_argument("-nskip", type=int, help="time from nskip", default=0)
-    parser.add_argument("-plot", help="plot the data", action='store_true')
-
-    args = parser.parse_args(arguments)
     pnum = 0
-    if args.nskip!= 0:
-        with open(args.data, 'r') as read:
+    if nskip!= 0:
+        with open(data, 'r') as read:
             _, _, _ = read.readline(), read.readline(), read.readline()
             for idx, line in enumerate(read):
                 pnum = line.rstrip().split()[0]
-                if idx == args.nskip:
+                if idx == nskip:
                     break
 
     starttime = 0
     times = []
     delta = 0
     skip_idx = -1
-    with open(args.i, 'r') as read:
+    with open(log, 'r') as read:
         for idx, line in enumerate(read):
             if "submit" in line and "END" in line:
                 date = line.split()[-2:]
@@ -180,6 +92,7 @@ def get_time(arguments):
 
     times = [i/(60*60*24) for i in times]
     tottime = times[-1] # days
+    print('gorilla', tottime)
     tottime_d = int(np.floor(tottime))
     tottime_h = (tottime%1)*24
     t_label = f'{tottime:.02f} D / {tottime_d} D {tottime_h:.1f} H'
@@ -188,13 +101,14 @@ def get_time(arguments):
     skiptime_d = int(np.floor(skiptime))
     skiptime_h = (skiptime%1)*24
     s_label = f'{skiptime:.02f} D / {skiptime_d} D {skiptime_h:.1f} H'
-    if args.nskip > 0:
+    if nskip > 0:
         print('skip time:', s_label)
 
-    if args.plot:
+    if plot:
         plt.plot(list(range(len(times))), times, label=t_label)
-        if args.nskip > 0:
+        if nskip > 0:
             plt.axvline(skip_idx, color='k', label=s_label)
         plt.legend(frameon=False)
-        plt.ylabel('simulation time [days]')
+        plt.xlabel('Number of paths.')
+        plt.ylabel('Simulation time [days]')
         plt.show()
