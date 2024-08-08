@@ -13,10 +13,11 @@ class Format(str, Enum):
 
 def recalculate_order(
     toml: Annotated[str, typer.Option("-toml")] = "infretis.toml",
+    traj: Annotated[str, typer.Option("-traj")] = "traj.xyz",
     log: Annotated[str, typer.Option("-log")] = "sim.log",
-    out: Annotated[bool, typer.Option("-out", help="the output of the analysis")] = False,
+    out: Annotated[str, typer.Option("-out", help="the output of the analysis")] = "order_rec.txt",
     format: Annotated[Format, typer.Option("-format", case_sensitive=False, help="the file format of the trajectory (.traj is ase format)")] = Format.ONE,
-    box: Annotated[Tuple[int, int, int], typer.Option("-box", help="xyz only; box dimensions in angstrom (e.g. 30 30 30)")] = None,
+    box: Annotated[Tuple[float, float, float], typer.Option("-box", help="xyz only; box dimensions in angstrom (e.g. 30 30 30)")] = None,
     ):
     """
     Recalculate the orderparamter from a trajectory file.

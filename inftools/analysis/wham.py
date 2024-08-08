@@ -10,7 +10,7 @@ from inftools.analysis.Wham_Pcross import run_analysis
 
 def wham(
     toml: Annotated[str, typer.Option("-toml", help="The infretis simulation toml file")] = "infretis.toml",
-    data: Annotated[str, typer.Option("-traj", help="The infretis data.txt file")] = "infretis_data.txt",
+    data: Annotated[str, typer.Option("-data", help="The infretis data.txt file")] = "infretis_data.txt",
     nskip: Annotated[int, typer.Option("-nskip", help="Number of lines to skip in infretis_data.txt")] = 100,
     lamres: Annotated[float, typer.Option("-lamres", help="Resolution along the orderparameter, (intf1-intf0)/10)")] = None,
     nblock: Annotated[int, typer.Option("-nblock", case_sensitive=False, help="Minimal number of blocks in the block-error analysis")] = 5,
