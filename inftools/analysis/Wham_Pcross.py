@@ -4,6 +4,7 @@ import numpy as np
 
 from inftools.analysis.rec_error import rec_block_errors
 from inftools.analysis.toolsWHAM import PcrossWHAM2, get_WHAMfactors
+from inftools.analysis.Free_energy import calculate_free_energy
 
 
 def run_analysis(inp_dic):
@@ -842,8 +843,7 @@ def run_analysis(inp_dic):
         # "Semi"-WHAM factors for the [0^-] ensemble
         WFtot = [a + b for a, b in zip(WHAMfactorsMIN, WHAMfactors)]
         trajlabels = [int(x[0]) for x in matrix]
-        from infretis.tools.Free_energy import calculate_free_energy
 
-        calculate_free_energy(trajlabels, WFtot, inp_dic["trajdir"])
+        calculate_free_energy(trajlabels, WFtot, inp_dic["trajdir"], folder)
 
     # Finished!

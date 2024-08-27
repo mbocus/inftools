@@ -1,13 +1,14 @@
+import os
 import numpy as np
 
 Nbinsx = 100  # number of bins in x-direction
 Nbinsy = 100  # number of bins in y-direction
-Minx = -1  # minimum orderparameter value x-direction
-Maxx = 3  # maximum orderparameter value x-direction
-Miny = -2.5
-Maxy = 2.5
-xcol = 2  # which column in order.txt to use as x-values
-ycol = 3  # which column in order.txt to use as y-values
+Minx = 0  # minimum orderparameter value x-direction
+Maxx = 180  # maximum orderparameter value x-direction
+Miny = 0
+Maxy = 360
+xcol = 1  # which column in order.txt to use as x-values
+ycol = 2  # which column in order.txt to use as y-values
 
 
 def extract(trajfile):
@@ -58,7 +59,7 @@ def printhisto(xval, yval, histogram, ofile):
             file.write(row + "\n")
 
 
-def calculate_free_energy(trajlabels, WFtot, Trajdir):
+def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder):
     print("We are now going to perform the Landau Free Energy calculations")
     print(
         "Check Free_energy.py and modify to your needs"
@@ -77,6 +78,10 @@ def calculate_free_energy(trajlabels, WFtot, Trajdir):
     # normalize such that the highest value equals 1
     max_value = np.max(histogram)
     histogram /= max_value
-    printhisto(xval, yval, histogram, "histogram_output.txt")
+    #printhisto(xval, yval, histogram, f"{outfolder}/histogram_output.txt")
+    np.savetxt(os.path.join(outfolder, "histo_xval.txt"), xval)
+    np.savetxt(os.path.join(outfolder, "histo_yval.txt"), yval)
+    np.savetxt(os.path.join(outfolder, "histo_probability.txt"), histogram)
     histogram = -np.log(histogram)  # get Landau free energy in kBT units
-    printhisto(xval, yval, histogram, "free_energy_output.txt")
+    np.savetxt(os.path.join(outfolder, "histo_free_energy.txt"), histogram)
+    #printhisto(xval, yval, histogram, "free_energy_output.txt")
