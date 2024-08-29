@@ -15,6 +15,7 @@ def run_analysis(inp_dic):
     minblocks = int(inp_dic["nblock"])
     nskip = int(inp_dic["nskip"])
     folder = inp_dic["folder"]
+    histo_stuff = inp_dict["histo_stuff"]
 
     # the Cxy values of [0+] are stored in the i0plus-th
     # column (first coulumn is counted as column nr 0)
@@ -844,6 +845,6 @@ def run_analysis(inp_dic):
         WFtot = [a + b for a, b in zip(WHAMfactorsMIN, WHAMfactors)]
         trajlabels = [int(x[0]) for x in matrix]
 
-        calculate_free_energy(trajlabels, WFtot, inp_dic["trajdir"], folder)
+        calculate_free_energy(trajlabels, WFtot, inp_dic["trajdir"], folder, histo_stuff)
 
     # Finished!

@@ -1,17 +1,7 @@
 import os
 import numpy as np
 
-Nbinsx = 100  # number of bins in x-direction
-Nbinsy = 100  # number of bins in y-direction
-Minx = 0  # minimum orderparameter value x-direction
-Maxx = 180  # maximum orderparameter value x-direction
-Miny = 0
-Maxy = 360
-xcol = 1  # which column in order.txt to use as x-values
-ycol = 2  # which column in order.txt to use as y-values
-
-
-def extract(trajfile):
+def extract(trajfile, xcol, ycol):
     # Read and process the file
     with open(trajfile) as file:
         # Use a list comprehension to extract non-comment lines
@@ -59,12 +49,17 @@ def printhisto(xval, yval, histogram, ofile):
             file.write(row + "\n")
 
 
-def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder):
+def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder, histo_stuff):
     print("We are now going to perform the Landau Free Energy calculations")
     print(
         "Check Free_energy.py and modify to your needs"
         + " as it contains some hard coded pytrhon script."
     )
+    Nbinsx, Nbinsy = histo_stuff["nbx"], histo_stuff["nby"]
+    Maxx, Minx = histo_stuff["maxx"], histo_stuff["minx"]
+    Maxy, Miny = histo_stuff["maxy"], histo_stuff["miny"]
+    xcol, ycol = histo_stuff["xcol"], histo_stuff["ycol"]
+
     histogram = np.zeros((Nbinsx, Nbinsy))
     dx = (Maxx - Minx) / Nbinsx
     dy = (Maxy - Miny) / Nbinsy
@@ -73,7 +68,7 @@ def calculate_free_energy(trajlabels, WFtot, Trajdir, outfolder):
     # mid-points of the bins
     for label, factor in zip(trajlabels, WFtot):
         trajfile = Trajdir + "/" + str(label) + "/order.txt"
-        xy = extract(trajfile)
+        xy = extract(trajfile, xcol, ycol)
         histogram = update_histogram(xy, factor, histogram, Minx, Miny, dx, dy)
     # normalize such that the highest value equals 1
     max_value = np.max(histogram)
