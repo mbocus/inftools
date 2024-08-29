@@ -15,7 +15,7 @@ def run_analysis(inp_dic):
     minblocks = int(inp_dic["nblock"])
     nskip = int(inp_dic["nskip"])
     folder = inp_dic["folder"]
-    histo_stuff = inp_dict["histo_stuff"]
+    histo_stuff = inp_dic["histo_stuff"]
 
     # the Cxy values of [0+] are stored in the i0plus-th
     # column (first coulumn is counted as column nr 0)
