@@ -47,8 +47,12 @@ def generate_zero_paths(
     engine = state.engines[config["engine"]["engine"]]
     engine.exe_dir = str(tmp_dir.resolve())
     print(engine.exe_dir)
+    if "dask" in config.keys():
+        wmdrun = config["dask"]["wmdrun"][0]
+    else:
+        wmdrun = config["runner"]["wmdrun"][0]
     engine.set_mdrun(
-        {"wmdrun": config["dask"]["wmdrun"][0], "exe_dir": engine.exe_dir}
+        {"wmdrun": wmdrun, "exe_dir": engine.exe_dir}
     )
     system0.set_pos((os.path.join(engine.input_path, initial_configuration), 0))
     engine.rgen = np.random.default_rng()
