@@ -11,12 +11,13 @@ class Format(str, Enum):
     TWO = "xyz"
     THR = "traj"
 
+
 def recalculate_order(
     toml: Annotated[str, typer.Option("-toml")] = "infretis.toml",
     traj: Annotated[str, typer.Option("-traj")] = "traj.xyz",
     log: Annotated[str, typer.Option("-log")] = "sim.log",
     out: Annotated[str, typer.Option("-out", help="the output of the analysis")] = "order_rec.txt",
-    format: Annotated[Format, typer.Option("-format", case_sensitive=False, help="the file format of the trajectory (.traj is ase format)")] = Format.ONE,
+    format: Annotated[str, typer.Option("-format", case_sensitive=False, help="the file format of the trajectory (.traj is ase format)")]= "trr",
     box: Annotated[Tuple[float, float, float], typer.Option("-box", help="xyz only; box dimensions in angstrom (e.g. 30 30 30)")] = None,
     ):
     """
@@ -33,11 +34,12 @@ def recalculate_order(
     import os
     import numpy as np
     import tomli
+    import struct
 
     from infretis.classes.engines.cp2k import read_xyz_file
-    from infretis.classes.engines.gromacs import read_trr_file
     from infretis.classes.orderparameter import create_orderparameter
     from infretis.classes.system import System
+    from inftools.analysis.gromacs import read_trr_file
 
     if os.path.exists(out):
         raise FileExistsError(f"File {out} exists, aborting")
