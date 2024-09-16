@@ -3,7 +3,6 @@ import pathlib
 import typer
 
 import numpy as np
-import pathlib as pl
 
 from typing import Annotated
 from infretis.classes.engines.factory import create_engines
@@ -14,9 +13,11 @@ from infretis.classes.system import System
 from infretis.setup import setup_config
 from infretis.scheduler import scheduler
 
+from inftools.analysis.infinit_helpers import *
+
 PHRASES = [
-    ["Infinit mode:", "Engaging endless loops with ∞RETIS",],
     ["Infinitely fast from A to B","with ∞RETIS"],
+    ["Infinit mode:", "Engaging endless loops with ∞RETIS",],
     ["Installing infinite improbability drivers ...", "∞RETIS is allready installed!",],
     ["Solving the time warp", "in digital chemical discoveries",],
     ["Performing infinite swaps", "no molecules are harmed in this exchange!",],
@@ -24,9 +25,8 @@ PHRASES = [
     ["Pushing for transitions", "molecules, please keep your seatbelts fastened!",],
     ["Propagating through time", " please hold on to your atoms!",],
     ["Propagating backwards in time", "because forward is too mainstream!",],
-    ["Swapping trajectories", "it's molecular musical chairs!",],
     ["Fluxing through rare events",  "with ∞RETIS",],
-    ["∞RETIS:", "taking molecular strolls in parallel!",],
+    ["Taking molecular strolls in parallel", "with ∞RETIS",],
     ["Shooting through the void", "with ∞RETIS",],
     ["Infinit /ˈɪnfɪnət/ (adjective)", "limitless or endless in space, extent, or size"]
 ]
@@ -166,65 +166,42 @@ def generate_zero_paths(
             traj_path = tmp_dir / trajfile
             traj_path.rename(accepted / trajfile)
 
-def set_default_infinit(config):
-    interfaces = config["simulation"]["interfaces"]
-    assert len(interfaces) > 1, "Define some interfaces!"
-    config["simulation"]["interfaces"] = [interfaces[0], interfaces[-1]]
-
-    steps_per_iter = config["infinit"]["steps_per_iter"]
-    config["infinit"]["steps_per_iter"] = steps_per_iter
-
-    cstep = config["infinit"].get("cstep", 0)
-    config["infinit"]["cstep"] = cstep
-    assert cstep >= 0, "Cant restart from negative cstep??"
-    assert cstep <= len(steps_per_iter[cstep:]), "Nothing to do"
-    if cstep > 0:
-        print(f"Restarting infinit from iteration {cstep}.")
-
-    return config["infinit"]
-
-def run_infretis(config, steps):
-    config["simulation"]["steps"] = steps
-    scheduler(config)
-
-def run_wham():
-    pass
-
-def print_logo(step: int = -1):
-    from rich.console import Console
-    from rich.text import Text
-
-    console = Console()
-    art = Text()
-    # add some initial states, a [0+] path and [0-] path,
-    # some A-B paths, etcetera etcetera
-    if step >= len(PHRASES) or step == -1:
-        step = np.random.choice(len(PHRASES))
-    str1,str2 = PHRASES[step]
-    art.append("\n")
-    art.append("         o             ∞       ____          \n", style="bright_blue")
-    art.append("__________\________o__________/____\_________\n", style="bright_blue")
-    art.append("           \      /          o      o        \n", style="bright_blue")
-    art.append("            \____/                           \n", style="bright_blue")
-    art.append(str1,style="bright_cyan")
-    art.append(f"{'_'*(45-len(str1))}\n", style="bright_blue")
-    art.append("_____________________________________________\n", style="bright_blue")
-    art.append(" _          __  _         _  _               \n", style="bold light_cyan")
-    art.append("(_) _ __   / _|(_) _ __  (_)| |_             \n", style="bold bright_yellow")
-    art.append("| || '_ \ | |_ | || '_ \ | || __|            \n", style="bold bright_magenta")
-    art.append("| || | | ||  _|| || | | || || |_             \n", style="bold bright_green")
-    art.append("|_||_| |_||_|  |_||_| |_||_| \__|            \n", style="bold white")
-    art.append("______________\______________________________\n", style="bright_blue")
-    art.append("   ∞           o                o            \n", style="bright_blue")
-    #art.append("             o                    ",style="bright_blue")
-    art.append(f"{str2:>45}\n", style="bright_cyan")
-    console.print(art)
 
 def infinit(
     toml: Annotated[str, typer.Option("-toml", help="Path to .toml")] = "infretis.toml",
+    log: Annotated[str, typer.Option("-log", help="File for logging output")] = "infinit.log",
     ):
-    """The infretis initial path generator.""")
-    # TODO: restart
+    """The infretis initial path generator.
+
+    Based on the YouTube series:
+    https://www.youtube.com/watch?v=mW9tC2A7COs&list=PL5dSi5eZMe1iN_Uz8pTph6i8AGXhVUZIj&index=24
+    """
+
+    # Lecture 04:
+    # define the grid spacing for lambda values. All interface positions are
+    # are rounded off to this vlue
+    lamres = 0.01 # e.g. second digit if lamres = 0.01
+
+    # skip this fraction of initial paths for analysis (when estimating new intf?)
+    initskip = 0.1 # skip 10% of initial paths
+
+    # compute efficiency measure for present set of interfaces and optimal set
+    # (estimated from WHAM). If efficiency is worse than some factor, we update
+    tolerance = 1.2 # if worse than 20% compared to optimal efficiency
+
+    # estimated lower bound for local crossing probability
+    pL = 0.3
+
+    # njumps Lp/Ls where Lp is average len full path, and Ls average len sub traj
+    # lambda_cap to avoid A -> B trajs. E.g. 10% B->B paths in wf. Alternatively,
+    # palce lambda_cap in half between lambdaN and lambda(N-1)
+
+    # Lecture 05: set lambda0 lambdaN
+
+
+    # TODO: restart, log file instead of print
+    log = LightLogger(log)
+
 
     # we need among others parameters set in [infinit]
     config = setup_config(toml)
@@ -233,15 +210,15 @@ def infinit(
     cstep = iset["cstep"]
 
     if iset["cstep"]  == 0:
-        print("Generating zero paths ...")
+        log.log("Generating zero paths ...")
         init_conf = pl.Path(iset["initial_conf"]).resolve()
         generate_zero_paths(str(init_conf), toml = toml, config = config)
-        print("Done with zero paths!\n")
-    print('Running infretis initialization "infinit" ...')
-    import time
+        log.log("Done with zero paths!\n")
+    log.log('Running infretis initialization "infinit" ...')
+    print_logo()
     for iretis_steps in iset["steps_per_iter"][cstep:]:
-        print(f"Step {iset['cstep']}:")
-        print_logo(step = iset["cstep"])
-        time.sleep(3)
-        #run_infretis(config, iretis_steps)
+        log.log(f"Step {iset['cstep']}:")
+        #print_logo(step = iset["cstep"])
+        #time.sleep(3)
+        run_infretis(config, iretis_steps)
         iset["cstep"] += cstep + 1
