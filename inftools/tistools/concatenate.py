@@ -1,39 +1,56 @@
 from typing import Annotated
 import typer
 
-def concatenate_xyz(
-    out: Annotated[str, typer.Option("-out", help="the outfile trajectory name")],
-    traj: Annotated[str, typer.Option("-traj", help="the traj.txt file. Trajectories should be in same folder")],
-    selection: Annotated[str, typer.Option("-selection", help="The selection, e.g. 'protein' or 'resname UNL'")]="all",
-    engine: Annotated[str, typer.Option("-engine", help="The selection, e.g. 'protein' or 'resname UNL'")]="cp2k",
+def trjcat(
+    out: Annotated[str, typer.Option("-out", help="output trajectory name, format")],
+    traj: Annotated[str, typer.Option("-traj", help="path to the traj.txt file")],
+    selection: Annotated[str, typer.Option("-selection", help="atom selection to write to output")]="all",
+    engine: Annotated[str, typer.Option("-engine", help="what engine to use for concatenation")]="mda",
+    traj_format: Annotated[str, typer.Option("-format", help = "trajectory format, can be inferred")] = None,
+    topology: Annotated[str, typer.Option("-topology", help = "a structure file with atom info")] = None,
+    centersel: Annotated[str, typer.Option("-centersel", help="center this atom selction in the middle of the box")] = "",
         ):
-    "Reverse and concatenate .xyz trajectories from an infretis simulation."
+    "Concatenate the trajectories from an infretis simulation to a single file."
     import numpy as np
+    import pathlib
     import MDAnalysis as mda
+    from MDAnalysis import transformations as trans
     import os
     from ase.io.trajectory import Trajectory
     from ase.io import write
 
-    traj_file_arr, index_arr = np.loadtxt(traj,usecols=[1,2],comments="#",dtype=str,unpack=True)
+    traj = pathlib.Path(traj)
+    traj_dir = traj.parents[0]
+    traj_file_arr, index_arr = np.loadtxt(str(traj),usecols=[1,2],comments="#",dtype=str,unpack=True)
     index_arr = index_arr.astype(int)
+
+    # trajectory transformations
+    if centersel and engine != "mda":
+        raise ValueError("centersel is only suppoerted with mda")
 
     # read the trajectories
     U = {}
     for traj_file in np.unique(traj_file_arr):
-        if not os.path.exists(traj_file):
+        traj_fpath = traj_dir / "accepted" / traj_file
+        if not traj_fpath.exists():
             raise FileNotFoundError(
-                    f"\n No such file {traj_file}, maybe you forgot to 'cd accepted/'?")
-        if engine == "cp2k":
-            U[traj_file] = mda.Universe(traj_file)
-            n_atoms = U[traj_file].select_atoms(selection).n_atoms
+                    f"\n No such file {traj_fpath.resolve()}")
+        if engine == "mda":
+            u = mda.Universe(topology, str(traj_fpath), format = traj_format)
+            U[traj_file] = u
+            if centersel:
+                tmp_sel = u.select_atoms(centersel)
+                workflow = [trans.center_in_box(tmp_sel),trans.wrap(u.atoms)]
+                u.trajectory.add_transformations(*workflow)
+            n_atoms = u.select_atoms(selection).n_atoms
         elif engine == "ase":
             if selection != "all":
                 raise NotImplementedError("Only selection all is implemented for ase egnine.")
-            U[traj_file] = Trajectory(traj_file)
+            U[traj_file] = Trajectory(str(traj_fpath))
             n_atoms = U[traj_file][0].positions.shape[0]
 
     # write the concatenated trajectory
-    if engine == "cp2k":
+    if engine == "mda":
         with mda.Writer(out, n_atoms) as wfile:
             for traj_file, index in zip(traj_file_arr,index_arr):
                 u = U[traj_file]
@@ -48,4 +65,3 @@ def concatenate_xyz(
             write(out, atoms, append = True)
 
     print("\nAll done!")
-
