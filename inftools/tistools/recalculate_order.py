@@ -15,7 +15,6 @@ class Format(str, Enum):
 def recalculate_order(
     toml: Annotated[str, typer.Option("-toml")] = "infretis.toml",
     traj: Annotated[str, typer.Option("-traj")] = "traj.xyz",
-    log: Annotated[str, typer.Option("-log")] = "sim.log",
     out: Annotated[str, typer.Option("-out", help="the output of the analysis")] = "order_rec.txt",
     format: Annotated[str, typer.Option("-format", case_sensitive=False, help="the file format of the trajectory (.traj is ase format)")]= "trr",
     box: Annotated[Tuple[float, float, float], typer.Option("-box", help="xyz only; box dimensions in angstrom (e.g. 30 30 30)")] = None,
@@ -35,6 +34,8 @@ def recalculate_order(
     import numpy as np
     import tomli
     import struct
+
+    import MDAnalysis as mda
 
     from infretis.classes.engines.cp2k import read_xyz_file
     from infretis.classes.orderparameter import create_orderparameter
@@ -63,6 +64,9 @@ def recalculate_order(
         traj = Trajectory(traj)
     elif format == "trr":
         traj = read_trr_file(traj)
+    else:
+        u = mda.Universe(traj, format = format)
+        traj = u.trajectory
 
 
     with open(out, "w") as writefile:
@@ -76,6 +80,9 @@ def recalculate_order(
             elif format == "trr":
                 pos=frame[1]["x"]
                 box=np.diag(frame[1]["box"])
+            else:
+                pos = u.atoms.positions
+                box = u.dimensions[:3]
 
             system = System()
             system.config = (traj, i)
@@ -86,6 +93,6 @@ def recalculate_order(
             line = f"{i} " + " ".join([f"{opi}" for opi in op]) + "\n"
             writefile.write(line)
 
-    print(f"[ INFO ] Orderparameter values written to {out}\n")
+    print(f"[ INFO ] Orderparameter values written to {out}\n")
 
     return

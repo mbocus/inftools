@@ -20,6 +20,18 @@ def trjcat(
     from ase.io import write
 
     traj = pathlib.Path(traj)
+    out = pathlib.Path(out)
+    if not traj.exists():
+        raise FileNotFoundError(f"No such file {traj}")
+    if out.exists():
+        raise FileExistsError(f"File {out} allready exists.")
+    if topology:
+        topology = pathlib.Path(topology)
+        if not topology.exists():
+            raise FileNotFoundError(f"No such file {topology}")
+
+
+
     traj_dir = traj.parents[0]
     traj_file_arr, index_arr = np.loadtxt(str(traj),usecols=[1,2],comments="#",dtype=str,unpack=True)
     index_arr = index_arr.astype(int)
