@@ -62,3 +62,14 @@ pytest
 ```
 
 We currently do not have a testing policy but please do include tests for the included CLI functions for higher coverage.
+
+### Guide
+
+#### Guide `center_periodic`
+
+The command `inft center_periodic` can be run to re-center an .xyz trajectory to a certain atom index. For example, to center the `C` atom in the `co2.xyz` frame in [`inftools/examples`](inftools/), the following command can be ran:
+
+
+```bash
+inft center_periodic -i co2.xyz -o co2_c.xyz -c 12.4138 -idx 0
+```
