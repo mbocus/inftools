@@ -17,7 +17,7 @@ inft -h
 
 #### `inft center_periodic`
 
-The command `inft center_periodic` can be run to re-center an .xyz trajectory to a certain atom index. For example, to center the first atom `C` at index 0 in the `co2.xyz` frame in [`examples/co2.xyz`](examples/co2.xyz), the following command can be ran:
+The command `inft center_periodic` can be run to re-center an .xyz trajectory to a certain atom index. For example, to center the first atom `C` at index 0 in the `co2.xyz` frame in [`examples/co2.xyz`](examples/co2.xyz) with cubic box length of 12.4138, the following command can be ran:
 
 ```bash
 inft center_periodic -i co2.xyz -o co2_c.xyz -c 12.4138 -idx 0
