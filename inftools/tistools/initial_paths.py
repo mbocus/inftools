@@ -1,5 +1,4 @@
 import os
-import pathlib
 import typer
 import tomli
 import tomli_w
@@ -7,6 +6,7 @@ import tomli_w
 import numpy as np
 import pathlib as pl
 import shutil
+import subprocess
 
 from typing import Annotated
 from infretis.classes.engines.factory import create_engines
@@ -51,7 +51,8 @@ def set_default_infinit(config):
     interfaces = config["simulation"]["interfaces"]
     assert config["infinit"]["nskip"] >= 0
     assert config["infinit"]["pL"] > 0
-    if config["infinit"]["cstep"] == 0:
+    cstep = config["infinit"]["cstep"]
+    if cstep == -1:
         assert len(interfaces) == 2, "Define 2 interfaces!"
     #config["simulation"]["interfaces"] = [interfaces[0], interfaces[-1]]
     #config["current"]["active"] = [0,1]
@@ -59,9 +60,7 @@ def set_default_infinit(config):
     steps_per_iter = config["infinit"]["steps_per_iter"]
     config["infinit"]["steps_per_iter"] = steps_per_iter
 
-    cstep = config["infinit"].get("cstep", 0)
     config["infinit"]["cstep"] = cstep
-    assert cstep >= 0, "Cant restart from negative cstep??"
     assert cstep < len(steps_per_iter), "Nothing to do"
     assert config["output"]["delete_old"] == False
     assert config["output"].get("delete_old_all", False) == False
@@ -78,6 +77,35 @@ def run_infretis(config, steps):
     config0["simulation"]["steps"] = steps
     scheduler(config0)
 
+def read_toml(toml):
+    toml = pl.Path(toml)
+    if toml.exists():
+        with open(toml, "rb") as rfile:
+            config = tomli.load(rfile)
+        return config
+    else:
+        return False
+
+def write_toml(config, toml):
+    with open(toml, "wb") as wfile:
+        tomli_w.dump(config, wfile)
+
+def run_infretis_ext(steps):
+    c0 = read_toml("infretis.toml")
+    c1 = read_toml("restart.toml")
+    if c1 and c0["infinit"]["cstep"] == c1["infinit"]["cstep"] and len(c0["simulation"]["interfaces"])==len(c1["simulation"]["interfaces"]) and np.allclose(c0["simulation"]["interfaces"],c1["simulation"]["interfaces"]):
+        print("Running with restart.toml")
+        c1["simulation"]["steps"] = steps
+        write_toml(c1, "restart.toml")
+        subprocess.run("infretisrun -i restart.toml", shell = True)
+    else:
+        print("Running with infretis.toml")
+        c0["simulation"]["steps"] = steps
+        write_toml(c0, "infretis.toml")
+        subprocess.run("infretisrun -i infretis.toml", shell = True)
+
+
+
 def update_interfaces(config):
     """Update the interface positions from crossing probability.
 
@@ -85,26 +113,33 @@ def update_interfaces(config):
     the fact that we want equal local crossing probabilities betewen
     interfaces.
     """
+    config1 = read_toml("restart.toml")
     x, p = calc_pcross(
-            config["output"]["data_file"],
-            config["simulation"]["interfaces"],
-            config["infinit"]["lamres"],
-            config["infinit"]["nskip"])
+            config1["output"]["data_file"],
+            config1["simulation"]["interfaces"],
+            config1["infinit"]["lamres"],
+            config1["infinit"]["nskip"])
     x, p = linearize_pcross(x, p) # remove NaN and 0 Pcross
-    n = config["runner"]["workers"]
+    n = config1["runner"]["workers"]
     Ptot = p[-1]
     pL = max(0.3, Ptot**(1/(2*n)))
     config["infinit"]["prev_Pcross"] = pL
     interfaces = estimate_interfaces(x, p, pL)
     config["simulation"]["interfaces"] = list(interfaces) + config["simulation"]["interfaces"][-1:]
 
-def update_folders(config):
+def update_folders():
+    config = read_toml("infretis.toml")
     old_dir = pl.Path(config["simulation"]["load_dir"])
     new_dir = pl.Path(f"run{config['infinit']['cstep']}")
     if new_dir.exists():
         msg = (f"{str(new_dir)} allready exists! Infinit does not "
-                + "overwrite. Remove any run directories manually.")
-        raise FileExistsError(msg)
+                + "overwrite.")
+        print(msg)
+        if not old_dir.exists():
+            print("Did not find {old_dir}.")
+            return False
+
+        return True
     #to_move = [
     #        "infretis_data.txt", "sim.log", "infretis.toml", "restart.toml"
     #        ]
@@ -113,18 +148,14 @@ def update_folders(config):
     shutil.move(old_dir, str(new_dir), copy_function = shutil.copytree)
     #for src in to_move:
     #    shutil.move(src, str(new_dir))
+    return False
 
 def update_toml(config):
-    toml = pl.Path("infretis.toml")
-    #if toml.exists():
-    #    raise FileExistsError(f"File {str(toml)} exists! Not overwriting.")
-    with open(str(toml), "rb") as rfile:
-        config0 = tomli.load(rfile)
+    config0 = read_toml("infretis.toml")
     config0["simulation"]["interfaces"] = config["simulation"]["interfaces"]
     config0["infinit"] = config["infinit"]
-    with open(str(toml), "wb") as wfile:
-        tomli_w.dump(config0, wfile)
-
+    shutil.copyfile("infretis.toml", f"infretis_{config['infinit']['cstep']}.toml")
+    write_toml(config0, "infretis.toml")
 
 def calc_pcross(ifile, lambda_interfaces, lamres, nskip):
     # the Cxy values of [0+] are stored in the i0plus-th
@@ -390,9 +421,9 @@ def generate_zero_paths(
     multiple infRETIS simulations."""
 
     # make a directory we work from
-    tmp_dir = pathlib.Path("temporary_load/")
+    tmp_dir = pl.Path("temporary_load/")
     tmp_dir.mkdir(exist_ok = False)
-    load_dir = pathlib.Path("load/")
+    load_dir = pl.Path("load/")
     load_dir.mkdir(exist_ok = False)
 
     initial_configuration = conf
@@ -400,20 +431,19 @@ def generate_zero_paths(
     # maximal length of initial paths
 
     # infretis parameters
-    if config == None:
-        config = setup_config(toml)
+    config = setup_config(toml)
     maxlen = config["simulation"]["tis_set"]["maxlength"]
     state = REPEX_state(config, minus=True)
 
     # setup ensembles
     state.initiate_ensembles()
-    state.engines = create_engines(config)
+    state.engines, state.engine_occ = create_engines(config)
     create_orderparameters(state.engines, config)
 
     # initial configuration to start from
     system0 = System()
     engine_key = list(state.engines.keys())[0]
-    engine = state.engines[engine_key][1][0]
+    engine = state.engines[engine_key][0]
     engine.exe_dir = str(tmp_dir.resolve())
     if "dask" in config.keys():
         wmdrun = config["dask"]["wmdrun"][0]
@@ -554,37 +584,46 @@ def infinit(
 
 
     # we need among others parameters set in [infinit]
-    config = setup_config(toml)
+    config = read_toml(toml)
     # get the infinit settings from 'config' and set default parameters
     print(config)
     iset = set_default_infinit(config)
-    cstep = iset["cstep"]
 
-    if iset["cstep"]  == 0:
+    if iset["cstep"]  == -1:
         log.log("Generating zero paths ...")
         init_conf = pl.Path(iset["initial_conf"]).resolve()
-        max_op = generate_zero_paths(str(init_conf), toml = toml, config = config)
+        max_op = generate_zero_paths(str(init_conf), toml = toml)
         log.log(f"Done with zero paths! Max op: {max_op}\n")
+        iset["cstep"] = 0
         d_lambda = max_op - config["simulation"]["interfaces"][0]
         if iset["lamres"] > (d_lambda)/config["runner"]["workers"]:
             lamres = (d_lambda)/config["runner"]["workers"]
             print(f"Lamres too large. Setting lamres to {lamres}.")
             iset["lamres"] = lamres
             iset["max_op"] = max_op
-
-        with open("infretis_infinit.toml", "wb") as wfile:
-            tomli_w.dump(config, wfile)
+        c0 = read_toml("infretis.toml")
+        c0["infinit"] = iset
+        write_toml(c0, "infretis.toml")
 
     log.log('Running infretis initialization "infinit" ...')
     print_logo(step = -1)
-    for iretis_steps in iset["steps_per_iter"][cstep:]:
+    for iretis_steps in iset["steps_per_iter"][iset["cstep"]:]:
         log.log(f"Step {iset['cstep']}: Running infretis")
-        run_infretis(config, iretis_steps)
+        run_infretis_ext(iretis_steps)
         log.log("Updating interfaces.")
-        print(config["output"])
+        print(config)
         update_interfaces(config)
+        msg = "interfaces = ["
+        msg += ", ".join([str(intf) for intf in config["simulation"]["interfaces"]])
+        msg += "]"
+        log.log(msg)
         log.log("Moving and writing files.")
-        update_folders(config)
+        has_load = update_folders()
+        iset["cstep"] += 1
         update_toml(config)
-        initial_path_from_iretis(f"run{iset['cstep']}", "infretis.toml")
-        iset["cstep"] += cstep + 1
+        print(iretis_steps,has_load)
+        if not has_load:
+            print("1234")
+            initial_path_from_iretis(f"run{iset['cstep']-1}", "infretis.toml")
+        else:
+            print("4321")
