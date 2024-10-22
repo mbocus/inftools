@@ -122,21 +122,13 @@ def update_interfaces(config):
     # x, p = linearize_pcross(x, p) # remove NaN and 0 Pcross
 
     if 'x' in config1["infinit"]:
-        # x0 = np.array(config1["infinit"]["x"])
         p0 = config1["infinit"]["p"]
         p0 = np.pad(p0, (0, len(x)-len(p0)))
         w_acc = config1["infinit"]["w_acc"]
         w_n = config1["simulation"]["steps"]
 
-        # x_short, x_long = min(x, x0, key=len), max(x, x0, key=len)
-        # p_short, p_long = min(p, x0, key=len), max(x, x0, key=len)
-
         for idx, ip in enumerate(p):
-            # p_long[idx] = ip*(config1[
             p[idx] = ip*w_n/(w_n+w_acc) + p0[idx]*w_acc/(w_n+w_acc)
-        # x_new = np.zeros(max([len(x), len(x0)]))
-        # p_new = np.zeros(max([len(p), len(p0)]))
-
     x, p = linearize_pcross(x, p) # remove NaN and 0 Pcross
 
     n = config1["runner"]["workers"]
