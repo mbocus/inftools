@@ -447,8 +447,11 @@ def generate_zero_paths(
 
     # maximal length of initial paths
 
+    config0 = read_toml(toml)
+    config0["runner"]["workers"] = 1
+    write_toml(config0, "zero_paths.toml")
     # infretis parameters
-    config = setup_config(toml)
+    config = setup_config("zero_paths.toml")
     maxlen = config["simulation"]["tis_set"]["maxlength"]
     state = REPEX_state(config, minus=True)
 
@@ -470,6 +473,7 @@ def generate_zero_paths(
         {"wmdrun": wmdrun, "exe_dir": engine.exe_dir}
     )
     system0.set_pos((os.path.abspath(initial_configuration), 0))
+    system0.order = engine.calculate_order(system0)
     engine.rgen = np.random.default_rng()
     engine.modify_velocities(system0, config["simulation"]["tis_set"])
 
@@ -483,6 +487,7 @@ def generate_zero_paths(
     print("Propagating in ensemble [0-]")
     status0, message0 = engine.propagate(path0, state.ensembles[0], system0)
     system0.set_pos((os.path.abspath(initial_configuration), 0))
+    system0.order = engine.calculate_order(system0)
     print("Propagating in ensemble [0+]")
     status1, message1 = engine.propagate(path1, state.ensembles[1], system0)
 
@@ -491,6 +496,7 @@ def generate_zero_paths(
     if path0.length == 1:
         print("Re-propagating [0-] since we started above lambda0")
         system0.set_pos((engine.dump_config(path1.phasepoints[-1].config), 0))
+        system0.order = engine.calculate_order(system0)
         path0 = Path(maxlen=maxlen)
         status0, message0 = engine.propagate(path0, state.ensembles[0], system0)
 
@@ -499,6 +505,7 @@ def generate_zero_paths(
     elif path1.length == 1:
         print("Re-propagating [0+] since we started below lambda0")
         system0.set_pos((engine.dump_config(path0.phasepoints[-1].config), 0))
+        system0.order = engine.calculate_order(system0)
         path1 = Path(maxlen=maxlen)
         status1, message1 = engine.propagate(path1, state.ensembles[1], system0)
 
@@ -537,12 +544,14 @@ def generate_zero_paths(
         # combine forward and backward path
         path = paste_paths(pathsr[i], pathsf[i])
         # save order paramter
-        order = [pp.order[0] for pp in path.phasepoints]
-        max_order = np.max(order)
+        order = np.array([pp.order for pp in path.phasepoints])
+        max_order = np.max(order[:,0])
         if max_order > max_op:
             max_op = max_order
-        order = np.vstack((np.arange(len(order)), np.array(order))).T
-        np.savetxt(str(orderfile), order, fmt=["%d", "%12.6f"])
+        order = np.hstack((np.arange(len(order)).reshape(-1,1), np.array(order)))
+        print(order.shape)
+        fmt = ["%d"] + ["%12.6f" for i in range(order.shape[1]-1)]
+        np.savetxt(str(orderfile), order, fmt=fmt)
         N = len(order)
         # save traj.txt
         np.savetxt(
