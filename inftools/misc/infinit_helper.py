@@ -121,7 +121,7 @@ def update_interfaces(config):
     Ptot = p[-1]
     num_ens = config["infinit"].get("num_ens", False)
     if num_ens:
-        pL = Ptot**(1/(num_ens-1))
+        pL = Ptot**(1/(num_ens-2))
     else:
         pL = max(0.3, Ptot**(1/(2*n)))
     config["infinit"]["prev_Pcross"] = pL

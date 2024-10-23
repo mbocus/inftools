@@ -10,6 +10,8 @@ import pytest
 import tomli
 import tomli_w
 
+from inftools.misc.infinit_helper import read_toml
+
 
 @pytest.mark.heavy
 def test_infinit_1(tmp_path: PosixPath) -> None:
@@ -32,12 +34,13 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
     # Check if files exist and that p is same or growing
     tomls = [f"infretis_{i}.toml" for i in range(2, 11)] + ["infretis.toml"]
     assert os.path.isfile(tomls[0])
-    config0 = tomli.load(tomls[0])
+
+    config0 = read_toml(tomls[0])
     assert "infinit" in config0
     assert "p" in config0["infinit"]
-    for item in items[1:]:
-        assert os.path.isfile(item)
-        config = tomli.load(item)
+    for toml in tomls[1:]:
+        assert os.path.isfile(toml)
+        config = read_toml(toml)
         assert "infinit" in config
         assert "p" in config["infinit"]
         assert len(config["infinit"]["p"]) >= len(config0["infinit"]["p"])
