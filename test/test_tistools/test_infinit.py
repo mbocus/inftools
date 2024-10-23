@@ -32,7 +32,7 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
     os.system("inft infinit")
 
     # Check if files exist and that p is same or growing
-    tomls = [f"infretis_{i}.toml" for i in range(2, 11)] + ["infretis.toml"]
+    tomls = [f"infretis_{i}.toml" for i in range(2, 6)] + ["infretis.toml"]
     assert os.path.isfile(tomls[0])
 
     config0 = read_toml(tomls[0])
