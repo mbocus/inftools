@@ -139,7 +139,11 @@ def update_interfaces(config):
     config["infinit"]["w_acc"] = config1["infinit"].get("w_acc", 0) + config1["simulation"]["steps"]
 
     Ptot = p[-1]
-    pL = max(0.3, Ptot**(1/(2*n)))
+    num_ens = config["infinit"].get("num_ens", False)
+    if num_ens:
+        pL = Ptot**(1/(num_ens-1))
+    else:
+        pL = max(0.3, Ptot**(1/(2*n)))
     config["infinit"]["prev_Pcross"] = pL
     interfaces = estimate_interfaces(x, p, pL)
     config["simulation"]["interfaces"] = list(interfaces) + config["simulation"]["interfaces"][-1:]
@@ -612,7 +616,6 @@ def infinit(
     # we need among others parameters set in [infinit]
     config = read_toml(toml)
     # get the infinit settings from 'config' and set default parameters
-    print(config)
     iset = set_default_infinit(config)
 
     if iset["cstep"]  == -1:
