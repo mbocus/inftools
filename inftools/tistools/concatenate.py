@@ -70,10 +70,11 @@ def trjcat(
                 u.trajectory[index]
                 wfile.write(ag.atoms)
     elif engine == "ase":
+        out = Trajectory(out, "w")
         for traj_file, index in zip(traj_file_arr, index_arr):
             # traj object
             u = U[traj_file]
             atoms = u[index]
-            write(out, atoms, append = True)
+            out.write(atoms)
 
     print("\nAll done!")
