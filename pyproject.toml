@@ -62,3 +62,8 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "scipy.optimize.*"
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+markers = [
+    "heavy: mark test as heavy.",
+]
