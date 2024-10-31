@@ -240,6 +240,10 @@ def infinit(
         write_toml(c0, "infretis.toml")
 
     log.log('Running infretis initialization "infinit" ...')
+    if not pl.Path("infretis.toml").exists():
+        print("Writing infretis.toml")
+        c0 = read_toml(toml)
+        write_toml(c0, "infretis.toml")
     print_logo(step = -1)
     for iretis_steps in iset["steps_per_iter"][iset["cstep"]:]:
         log.log(f"Step {iset['cstep']}: Running infretis")
