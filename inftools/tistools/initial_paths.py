@@ -3,6 +3,7 @@ import typer
 
 import numpy as np
 import pathlib as pl
+import shutil
 
 from typing import Annotated
 from infretis.classes.engines.factory import create_engines
@@ -130,9 +131,7 @@ def generate_zero_paths(
         accepted = dirname / "accepted"
         orderfile = dirname / "order.txt"
         trajtxtfile = dirname / "traj.txt"
-        print(f"Making folder: {str(dirname)}")
         dirname.mkdir()
-        print(f"Making folder: {str(accepted)}")
         accepted.mkdir()
         # combine forward and backward path
         path = paste_paths(pathsr[i], pathsf[i])
@@ -142,7 +141,6 @@ def generate_zero_paths(
         if max_order > max_op:
             max_op = max_order
         order = np.hstack((np.arange(len(order)).reshape(-1,1), np.array(order)))
-        print(order.shape)
         fmt = ["%d"] + ["%12.6f" for i in range(order.shape[1]-1)]
         np.savetxt(str(orderfile), order, fmt=fmt)
         N = len(order)
@@ -213,14 +211,32 @@ def infinit(
         max_op = generate_zero_paths(str(init_conf), toml = toml)
         log.log(f"Done with zero paths! Max op: {max_op}\n")
         iset["cstep"] = 0
-        d_lambda = max_op - config["simulation"]["interfaces"][0]
-        if iset["lamres"] > (d_lambda)/config["runner"]["workers"]:
-            lamres = (d_lambda)/config["runner"]["workers"]
-            print(f"Lamres too large. Setting lamres to {lamres}.")
-            iset["lamres"] = lamres
+        # for placing interfaces if we start with more than 1 worker
+        intf = config["simulation"]["interfaces"]
+        d_lambda = max_op - intf[0]
+        nworkers = config["runner"]["workers"]
+        lamres0 = 0.5*(d_lambda)/nworkers
+        if iset["lamres"] > lamres0:
+            print(f"Lamres too large. Setting lamres to {lamres0}.")
+            iset["lamres"] = lamres0
             iset["max_op"] = max_op
-        c0 = read_toml("infretis.toml")
+
+        # new interfaces to use for first infretis sim
+        intf = [intf[0]] + [intf[0]+2*lamres0*(i+1) for i in range(nworkers-1)] + [intf[1]]
+        sh_moves = ["sh", "sh"] + ["wf" for i in range(len(intf)-2)]
+
+        # create symlink to load/1 path Nworker-1 times
+        load_dir = pl.Path("load")
+        load0 = load_dir / "1"
+        for i in range(1,nworkers):
+            loadn = load_dir / str(i + 1)
+            #loadn.symlink_to(load0.relative_to(loadn.parent), target_is_directory=True)
+            shutil.copytree(load0, loadn)
+
+        c0 = read_toml(toml)
         c0["infinit"] = iset
+        c0["simulation"]["interfaces"] = intf
+        c0["simulation"]["shooting_moves"] = sh_moves
         write_toml(c0, "infretis.toml")
 
     log.log('Running infretis initialization "infinit" ...')
@@ -230,7 +246,7 @@ def infinit(
         run_infretis_ext(iretis_steps)
         log.log("Updating interfaces.")
         # print(config)
-        update_interfaces(config)
+        update_toml_interfaces(config)
         msg = "interfaces = ["
         msg += ", ".join([str(intf) for intf in config["simulation"]["interfaces"]])
         msg += "]"
@@ -239,9 +255,7 @@ def infinit(
         has_load = update_folders()
         iset["cstep"] += 1
         update_toml(config)
-        print(iretis_steps,has_load)
         if not has_load:
-            print("1234")
             initial_path_from_iretis(f"run{iset['cstep']-1}", "infretis.toml")
         else:
-            print("4321")
+            print("Doesnt have load?")
