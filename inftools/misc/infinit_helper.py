@@ -99,7 +99,6 @@ def update_interfaces(config):
             config1["simulation"]["interfaces"],
             config1["infinit"]["lamres"],
             config1["infinit"]["nskip"])
-    # x, p = linearize_pcross(x, p) # remove NaN and 0 Pcross
 
     if 'x' in config1["infinit"]:
         p0 = config1["infinit"]["p"]
