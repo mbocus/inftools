@@ -333,6 +333,7 @@ def plot_order(
         traj: Annotated[str, typer.Option("-traj", help="The path to the folder containing the trajectories (e.g. 'run1/load/')")],
         toml: Annotated[str, typer.Option("-toml", help="The .toml input file for reading the interfaces (e.g. 'infretis.toml')")],
         xy: Annotated[Tuple[int, int], typer.Option("-xy", help="The indices of the columns to plot (default 0 1)")] = (0, 1),
+        skip: Annotated[bool, typer.Option("-skip" , help="skip initial load paths")] = False,
     ):
     "Plot the order parameter of all paths from an infretis simulation."
     import matplotlib.pyplot as plt
@@ -361,6 +362,8 @@ def plot_order(
         lw = 1
 
     # plot all paths, modify by your needs
+    if skip:
+        sorted_paths = sorted_paths[len(interfaces):]
     for path in sorted_paths:
         x = np.loadtxt(path)
         if x[-1, 1] > interfaces[-1]:
