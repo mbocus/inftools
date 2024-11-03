@@ -140,8 +140,7 @@ def update_folders():
 
         return True
 
-    shutil.copytree(old_dir, new_dir)#, symlinks = True)
-    shutil.rmtree(old_dir)
+    shutil.move(old_dir, new_dir)
     return False
 
 def update_toml(config):
