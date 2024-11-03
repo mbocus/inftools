@@ -1,6 +1,69 @@
 from typing import Annotated
 import typer
 
+def estimate_interfaces2(
+    i: Annotated[str, typer.Option("-i", help="The Pcross.txt file")],
+    num: Annotated[int, typer.Option("-num", help="Number of interfaces")] = None,
+    ploc: Annotated[float, typer.Option("-ploc", help="Place interfaces to match ploc")] = None,
+    i0: Annotated[float, typer.Option("-i0", help="Position of the first interface")] = None,
+    iN: Annotated[float, typer.Option("-iN", help="Position of the last interface")] = None,
+    plot: Annotated[bool, typer.Option("-plot", help="Time from nskip")] = False,
+    ):
+    """
+    Estimate the interface positions from Pcross.txt by linearizing the curve.
+
+    """
+    import numpy as np
+    from inftools.misc.infinit_helper import (
+        smoothen_pcross,
+        estimate_interface_positions)
+    if plot:
+        import matplotlib.pyplot as plt
+
+    x = np.loadtxt(i)
+    x0 = x[:,0]
+    p0 = x[:,1]
+
+    # trim endpoints if i0 or iN given
+    iN = x0[-1] if iN is None else iN
+    i0 = x0[0] if i0 is None else i0
+    last_idx = np.where(x0 <= iN)[0][-1]
+    first_idx = np.where(x0 >= i0)[0][0]
+    x = x0[first_idx:last_idx]
+    p = p0[first_idx:last_idx]
+    p = p/p[0]
+
+    # linearalize the curve
+    x, p = smoothen_pcross(x, p)
+    if ploc is not None and num is None:
+        interfaces = estimate_interface_positions(x, p, ploc)
+        interfaces = list(interfaces) + [iN]
+        print(f"[INFO] Added {len(interfaces)} interfaces")
+
+    elif num is not None and ploc is None:
+        ploc = np.exp(np.log(p[-1]) / (num - 1))  # local crossing probability
+        print(f"[INFO] ploc = {ploc}")
+        interfaces = estimate_interface_positions(x, p, ploc)
+        interfaces = list(interfaces) + [iN]
+        print(f"[INFO] Added {len(interfaces)} interfaces")
+
+    else:
+        raise ValueError("Cant have both -num and -ploc set!")
+
+    print("interfaces = [", ", ".join([f"{itf:.6f}" for itf in interfaces]) + "]")
+
+    if plot:
+        f, a = plt.subplots(figsize=(8, 4))
+        a.plot(x0, p0, markersize=3, label = f"raw Pcross")
+        a.plot(x, p, label = "processed Pcross")
+        for inter in interfaces:
+            a.axvline(inter, c="k", lw=1)
+        a.set(yscale="log")
+        plt.legend()
+        plt.show()
+
+
+
 def estimate_interfaces(
     i: Annotated[str, typer.Option("-i", help="The Pcross.txt file")],
     num: Annotated[int, typer.Option("-num", help="Number of interfaces")],
