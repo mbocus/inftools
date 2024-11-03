@@ -48,7 +48,10 @@ def trjcat(
             raise FileNotFoundError(
                     f"\n No such file {traj_fpath.resolve()}")
         if engine == "mda":
-            u = mda.Universe(topology, str(traj_fpath), format = traj_format)
+            if topology is not None:
+                u = mda.Universe(topology, str(traj_fpath), format = traj_format)
+            else:
+                u = mda.Universe(str(traj_fpath), format = traj_format)
             U[traj_file] = u
             if centersel:
                 tmp_sel = u.select_atoms(centersel)
@@ -69,6 +72,7 @@ def trjcat(
                 ag = u.select_atoms(selection)
                 u.trajectory[index]
                 wfile.write(ag.atoms)
+
     elif engine == "ase":
         out = Trajectory(out, "w")
         for traj_file, index in zip(traj_file_arr, index_arr):
