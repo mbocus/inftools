@@ -105,7 +105,17 @@ def update_toml_interfaces(config):
 
         for idx, ip in enumerate(p):
             p[idx] = ip*w_n/(w_n+w_acc) + p0[idx]*w_acc/(w_n+w_acc)
+
     x, p = smoothen_pcross(x, p) # also remove NaN and 0 Pcross
+
+    # don't place interfaces above cap
+    intf_cap = config["simulation"]["tis_set"].get(
+            "interface_cap", config["simulation"]["interfaces"][-1]
+            )
+    last_point = np.where(x>intf_cap)[0]
+    if len(last_point)>0:
+        x = x[:last_point[0]]
+        p = p[:last_point[0]]
 
     n = config1["runner"]["workers"]
 
