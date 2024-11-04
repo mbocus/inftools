@@ -13,7 +13,7 @@ PHRASES = [
     ["Installing the infinite improbability drive ...", "∞RETIS is allready installed!",],
     ["Solving the time warp", "in digital chemical discoveries",],
     ["Performing infinite swaps", "no molecules are harmed in this exchange!",],
-    ["Asynchronous swaps engaged", "because who has time for synchronization?",],
+    ["Asynchronous mode enabled", "because who has time for synchronization?",],
     ["Pushing for transitions", "molecules, please keep your seatbelts fastened!",],
     ["Propagating forwards and backwards in time", " please hold on to your atoms!",],
     ["Fluxing through rare events",  "with ∞RETIS",],
