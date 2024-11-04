@@ -13,11 +13,13 @@ def trjcat(
     "Concatenate the trajectories from an infretis simulation to a single file."
     import numpy as np
     import pathlib
-    import MDAnalysis as mda
-    from MDAnalysis import transformations as trans
     import os
-    from ase.io.trajectory import Trajectory
-    from ase.io import write
+    if engine == "mda":
+        import MDAnalysis as mda
+        from MDAnalysis import transformations as trans
+    elif engine == "ase":
+        from ase.io.trajectory import Trajectory
+        from ase.io import write
 
     traj = pathlib.Path(traj)
     out = pathlib.Path(out)
