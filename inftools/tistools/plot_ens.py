@@ -7,12 +7,9 @@ def plot_ens(
     toml: Annotated[str, typer.Option("-toml")] = "restart.toml",
     skip: Annotated[bool, typer.Option("-skip", help="skip initial load paths")] = False,
     save: Annotated[ str, typer.Option("-save", help="save with scienceplots.") ] = "no",
-    pp: Annotated[
-        bool, typer.Option("-pp", help="partial paths version")
-    ] = False,
-    cap: Annotated[
-        int, typer.Option("-cap", help="max paths plotted per ens")
-    ] = 100,
+    pp: Annotated[ bool, typer.Option("-pp", help="partial paths version") ] = False,
+    cap: Annotated[ int, typer.Option("-cap", help="max paths plotted per ens") ] = 100,
+    time: Annotated[float, typer.Option("-time", help="divide dt by an amount") ] = 1,
 ):
     """Plot sampled ensemble paths with interfaces"""
     import os
@@ -43,7 +40,7 @@ def plot_ens(
     for ens in list(range(len(intf))):
         cnt = 0
         if ens not in (0, len(intf) - 1):
-            plt.axhline(intf[ens], color=f"{COLS[ens+1%len(COLS)]}", alpha=1.0)
+            plt.axhline(intf[ens], color=f"{COLS[(ens+1)%len(COLS)]}", alpha=1.0)
 
         with open(datafile) as read:
             for line in read:
@@ -58,7 +55,7 @@ def plot_ens(
                 if not os.path.isfile(pnum_f) or int(pnum) < len(intf):
                     continue
                 data = np.loadtxt(pnum_f)
-                plt.plot(data[:, 0] + acclen, data[:, 1], color=f"{COLS[ens%len(COLS)]}")
+                plt.plot((data[:, 0] + acclen)/time, data[:, 1], color=f"{COLS[ens%len(COLS)]}")
                 acclen += len(data[:, 0])
                 cnt += 1
                 if cnt == cap:
