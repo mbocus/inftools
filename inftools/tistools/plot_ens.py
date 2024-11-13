@@ -1,12 +1,6 @@
-import os
 from typing import Annotated
-
-import matplotlib.pyplot as plt
-import numpy as np
-import tomli
 import typer
 
-from inftools.tistools.max_op import COLS
 
 
 def plot_ens(
@@ -21,7 +15,14 @@ def plot_ens(
     ] = 100,
 ):
     """Plot sampled ensemble paths with interfaces"""
+    import os
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import tomli
+
+    from inftools.tistools.max_op import COLS
     if save != "no":
+        import scienceplots
         plt.style.use("science")
         plt.figure(figsize=(14, 10))
 
