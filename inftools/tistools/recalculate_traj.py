@@ -2,7 +2,8 @@ from typing import Annotated, Tuple
 import typer
 
 def recalculate_traj(
-    path: Annotated[str, typer.Option("-path", help="path to the path")] ,
+    path: Annotated[str, typer.Option("-path", help="path to the path's path
+                                      number, usually in load/{pn}")] ,
     toml: Annotated[str, typer.Option("-toml")] = "infretis.toml",
     out: Annotated[str, typer.Option("-out", help="the output of the analysis")] = "order_rec.txt",
     ):
