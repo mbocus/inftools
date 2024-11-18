@@ -24,9 +24,6 @@ def recalculate_order(
 
     TODO:
 
-    * We should be able to recalculate the OP from a path (i.e. use the
-      traj.txt and the trajs in the accepted/ folder for some path)
-
     * Read velocity information, and set vel_rev in config
     """
 
