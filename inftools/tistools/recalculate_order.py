@@ -24,9 +24,6 @@ def recalculate_order(
 
     TODO:
 
-    * We should be able to recalculate the OP from a path (i.e. use the
-      traj.txt and the trajs in the accepted/ folder for some path)
-
     * Read velocity information, and set vel_rev in config
     """
 
@@ -38,6 +35,7 @@ def recalculate_order(
     import MDAnalysis as mda
 
     from infretis.classes.engines.cp2k import read_xyz_file
+    from infretis.classes.engines.gromacs import read_gromos96_file
     from infretis.classes.orderparameter import create_orderparameter
     from infretis.classes.system import System
     from inftools.analysis.gromacs import read_trr_file
@@ -64,6 +62,9 @@ def recalculate_order(
         traj = Trajectory(traj)
     elif format == "trr":
         traj = read_trr_file(traj)
+    elif format == "g96":
+        _, xyz, vel, box = read_gromos96_file(traj)
+        traj = [[xyz, vel, box]]
     else:
         u = mda.Universe(traj, format = format)
         traj = u.trajectory
@@ -80,6 +81,9 @@ def recalculate_order(
             elif format == "trr":
                 pos=frame[1]["x"]
                 box=np.diag(frame[1]["box"])
+            elif format == "g96":
+                pos = frame[0]
+                box = frame[2]
             else:
                 pos = u.atoms.positions
                 box = u.dimensions[:3]
