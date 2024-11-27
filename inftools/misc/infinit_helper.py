@@ -10,16 +10,13 @@ PHRASES = [
     ["Infinit mode:", "Engaging endless loops with ∞RETIS",],
     ["Infinitely fast from A to B","with ∞RETIS"],
     ["Infinit mode:", "Engaging endless loops with ∞RETIS",],
-    ["Installing infinite improbability drivers ...", "∞RETIS is allready installed!",],
+    ["Installing the infinite improbability drive ...", "∞RETIS is allready installed!",],
     ["Solving the time warp", "in digital chemical discoveries",],
     ["Performing infinite swaps", "no molecules are harmed in this exchange!",],
-    ["Asynchronous swaps engaged", "because who has time for synchronization?",],
+    ["Asynchronous mode enabled", "because who has time for synchronization?",],
     ["Pushing for transitions", "molecules, please keep your seatbelts fastened!",],
-    ["Propagating through time", " please hold on to your atoms!",],
-    ["Propagating backwards in time", "because forward is too mainstream!",],
-    ["Swapping trajectories", "it's molecular musical chairs!",],
+    ["Propagating forwards and backwards in time", " please hold on to your atoms!",],
     ["Fluxing through rare events",  "with ∞RETIS",],
-    ["∞RETIS:", "taking molecular strolls in parallel!",],
     ["Taking molecular strolls in parallel", "with ∞RETIS",],
     ["Shooting through the void", "with ∞RETIS",],
     ["Infinit /ˈɪnfɪnət/ (adjective)", "limitless or endless in space, extent, or size"]
@@ -86,7 +83,7 @@ def run_infretis_ext(steps):
 
 
 
-def update_interfaces(config):
+def update_toml_interfaces(config):
     """Update the interface positions from crossing probability.
 
     It is based on the linearization of the crossing probability and
@@ -108,7 +105,17 @@ def update_interfaces(config):
 
         for idx, ip in enumerate(p):
             p[idx] = ip*w_n/(w_n+w_acc) + p0[idx]*w_acc/(w_n+w_acc)
-    x, p = linearize_pcross(x, p) # remove NaN and 0 Pcross
+
+    x, p = smoothen_pcross(x, p) # also remove NaN and 0 Pcross
+
+    # don't place interfaces above cap
+    intf_cap = config["simulation"]["tis_set"].get(
+            "interface_cap", config["simulation"]["interfaces"][-1]
+            )
+    last_point = np.where(x>intf_cap)[0]
+    if len(last_point)>0:
+        x = x[:last_point[0]]
+        p = p[:last_point[0]]
 
     n = config1["runner"]["workers"]
 
@@ -124,8 +131,10 @@ def update_interfaces(config):
     else:
         pL = max(0.3, Ptot**(1/(2*n)))
     config["infinit"]["prev_Pcross"] = pL
-    interfaces = estimate_interfaces(x, p, pL)
-    config["simulation"]["interfaces"] = list(interfaces) + config["simulation"]["interfaces"][-1:]
+    interfaces = estimate_interface_positions(x, p, pL)
+    intf = list(interfaces) + config["simulation"]["interfaces"][-1:]
+    config["simulation"]["interfaces"] = intf
+    config["simulation"]["shooting_moves"] = sh_moves = ["sh", "sh"] + ["wf" for i in range(len(intf)-2)]
 
 def update_folders():
     config = read_toml("infretis.toml")
@@ -140,19 +149,14 @@ def update_folders():
             return False
 
         return True
-    #to_move = [
-    #        "infretis_data.txt", "sim.log", "infretis.toml", "restart.toml"
-    #        ]
-    #to_move += [f"worker{i}.log" for i in range(config["runner"]["workers"])]
 
-    shutil.move(old_dir, str(new_dir), copy_function = shutil.copytree)
-    #for src in to_move:
-    #    shutil.move(src, str(new_dir))
+    shutil.move(old_dir, new_dir)
     return False
 
 def update_toml(config):
     config0 = read_toml("infretis.toml")
     config0["simulation"]["interfaces"] = config["simulation"]["interfaces"]
+    config0["simulation"]["shooting_moves"] = config["simulation"]["shooting_moves"]
     config0["infinit"] = config["infinit"]
     shutil.copyfile("infretis.toml", f"infretis_{config['infinit']['cstep']}.toml")
     write_toml(config0, "infretis.toml")
@@ -339,24 +343,24 @@ def print_logo(step: int = 0):
     str1,str2 = PHRASES[step]
     #art.append("\n")
     art.append("         o             ∞       ____          \n", style="bright_blue")
-    art.append("__________\________o__________/____\_________\n", style="bright_blue")
-    art.append("           \      /          o      o        \n", style="bright_blue")
-    art.append("            \____/                           \n", style="bright_blue")
+    art.append("__________\\________o__________/____\\_________\n", style="bright_blue")
+    art.append("           \\      /          o      o        \n", style="bright_blue")
+    art.append("            \\____/                           \n", style="bright_blue")
     art.append(str1,style="bright_cyan")
     art.append(f"{'_'*(45-len(str1))}\n", style="bright_blue")
     art.append("_____________________________________________\n", style="bright_blue")
     art.append(" _          __  _         _  _               \n", style="bold light_cyan")
     art.append("(_) _ __   / _|(_) _ __  (_)| |_             \n", style="bold bright_yellow")
-    art.append("| || '_ \ | |_ | || '_ \ | || __|            \n", style="bold bright_magenta")
+    art.append("| || '_ \\ | |_ | || '_ \\ | || __|            \n", style="bold bright_magenta")
     art.append("| || | | ||  _|| || | | || || |_             \n", style="bold bright_green")
-    art.append("|_||_| |_||_|  |_||_| |_||_| \__|            \n", style="bold white")
-    art.append("______________\______________________________\n", style="bright_blue")
+    art.append("|_||_| |_||_|  |_||_| |_||_| \\__|            \n", style="bold white")
+    art.append("______________\\______________________________\n", style="bright_blue")
     art.append("   ∞           o                o            \n", style="bright_blue")
     #art.append("             o                    ",style="bright_blue")
     art.append(f"{str2:>45}", style="bright_cyan")
     console.print(art)
 
-def linearize_pcross(x, p):
+def smoothen_pcross(x, p):
     x_out = x[p!=0]
     p = p[p!=0]
     p = np.log10(p)
@@ -386,7 +390,8 @@ def linearize_pcross(x, p):
     p_out[1,idx:] = p[idx]
     return x_out, 10**np.mean(p_out, axis=0)
 
-def estimate_interfaces(x, p, pL):
+def estimate_interface_positions(x, p, pL):
+    """Place new interfaces on Pcross such that the local crossing is pL."""
     i = 0
     interfaces = [0]
     while True:
