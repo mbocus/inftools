@@ -81,7 +81,7 @@ def generate_zero_paths(
     print("Propagating in ensemble [0-]")
     status0, message0 = engine.propagate(path0, state.ensembles[0], system0)
     system0.set_pos((os.path.abspath(initial_configuration), 0))
-    system0.order = engine.calculate_order(system0)
+    system0.order = path0.phasepoints[0].order
     print("Propagating in ensemble [0+]")
     status1, message1 = engine.propagate(path1, state.ensembles[1], system0)
 
@@ -90,7 +90,7 @@ def generate_zero_paths(
     if path0.length == 1:
         print("Re-propagating [0-] since we started above lambda0")
         system0.set_pos((engine.dump_config(path1.phasepoints[-1].config), 0))
-        system0.order = engine.calculate_order(system0)
+        system0.order = path1.phasepoints[-1].order
         path0 = Path(maxlen=maxlen)
         status0, message0 = engine.propagate(path0, state.ensembles[0], system0)
 
@@ -99,7 +99,7 @@ def generate_zero_paths(
     elif path1.length == 1:
         print("Re-propagating [0+] since we started below lambda0")
         system0.set_pos((engine.dump_config(path0.phasepoints[-1].config), 0))
-        system0.order = engine.calculate_order(system0)
+        system0.order = path0.phasepoints[-1].order
         path1 = Path(maxlen=maxlen)
         status1, message1 = engine.propagate(path1, state.ensembles[1], system0)
 
