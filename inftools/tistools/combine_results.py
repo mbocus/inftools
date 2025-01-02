@@ -66,12 +66,13 @@ def combine_data(
 
     # create col_order, i in (0, 1) are the 0^- and 0^+ ensembles
     tot_intfs = list(sorted(set(intfs)))
+    col_order = {intf: i for i, intf in enumerate(tot_intfs[1:-1], 2)}
 
     # write combo toml
     with open(f"{out}.toml", "wb") as f:
         tomli_w.dump({"simulation":{"interfaces": tot_intfs}}, f)
 
-    col_order = {intf: i for i, intf in enumerate(tot_intfs[1:-1], 2)}
+	# merge the sim results together with the combo col
     scramble_l = []
     with open(f"{out}.txt", "w") as write:
         for idx in sims.keys():
