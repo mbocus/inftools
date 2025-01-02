@@ -30,6 +30,10 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
         out="combo"
     )
 
+    # Assert that files exist
+    assert os.path.isfile("combo.toml")
+    assert os.path.isfile("combo.txt")
+
     # Get the combo interfaces.
     with open("combo.toml", "rb") as rfile:
         conf = tomli.load(rfile)
@@ -43,10 +47,6 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
             assert len(combo_intf) >= len(intf)
             intfs += intf
     assert set(intfs) == set(combo_intf)
-
-    # Assert that files exist
-    assert os.path.isfile("combo.toml")
-    assert os.path.isfile("combo.txt")
 
     # Run wham
     wham(toml="combo.toml", data="combo.txt")
