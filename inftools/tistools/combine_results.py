@@ -11,9 +11,9 @@ from inftools.misc.data_helper import data_reader
 def combine_data(
     tomls: Annotated[list[str], typer.Option("-tomls", help="tomls for all \
 simulations")],
-    datas: Annotated[list[str], typer.Option("-datas", help="data files for all\
+    datas: Annotated[list[str], typer.Option("-datas", help="data files for all \
 simulations")],
-    skip: Annotated[int, typer.Option("-skip", help="skip initial lines for\
+    skip: Annotated[int, typer.Option("-skip", help="skip initial lines for \
 all simulations")] = 100,
     scramble: Annotated[bool, typer.Option("-scramble", help="If output combo \
 data lines are scrambled.")] = True,
