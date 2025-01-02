@@ -366,12 +366,13 @@ def plot_order(
         sorted_paths = sorted_paths[len(interfaces):]
     for path in sorted_paths:
         x = np.loadtxt(path)
-        if x[-1, 1] > interfaces[-1]:
-             print(
-                 f"The path in {path} is reactive with \
-     phi={x[-1,2]:.2f}! \U0001F389 \U0001F938 \U0001F483"
-             )
-        #    continue # continues to next iteration in loop
+        if x.shape[1] > 2:
+           if x[-1, 1] > interfaces[-1]:
+                print(
+                    f"The path in {path} is reactive with \
+        phi={x[-1,2]:.2f}! \U0001F389 \U0001F938 \U0001F483"
+                )
+           #    continue # continues to next iteration in loop
         a.plot(
             x[:, xy[0]],
             x[:, xy[1]],
