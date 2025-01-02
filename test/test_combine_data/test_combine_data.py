@@ -1,4 +1,4 @@
-"""Test methods for doing TIS."""
+"""Test methods for combine_data."""
 import os
 import numpy as np
 from pathlib import PosixPath
