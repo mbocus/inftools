@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from inftools.tistools.concatenate import concatenate_xyz
+from inftools.tistools.concatenate import trjcat
 
 def read_xyz(inp):
     cnt = 0
@@ -13,7 +13,7 @@ def read_xyz(inp):
 
 
 
-def test_concatenate(tmp_path):
+def test_trjcat(tmp_path):
     """Check that we can modify the velocities with an engine,
     and that they are not equal to zero."""
     # folder we wil run from
@@ -24,7 +24,7 @@ def test_concatenate(tmp_path):
     os.chdir(str(folder)+"/path_xyz/accepted/")
 
     out = "merged.xyz"
-    concatenate_xyz(out=out, traj="../traj.txt")
+    trjcat(out=out, traj="../traj.txt")
     cnt = read_xyz(out)
 
     # check if merged file exist and is of length 90
