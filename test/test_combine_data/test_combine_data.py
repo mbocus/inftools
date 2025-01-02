@@ -1,14 +1,15 @@
 """Test methods for combine_data."""
 import os
-import numpy as np
-from pathlib import PosixPath
 from distutils.dir_util import copy_tree
+from pathlib import PosixPath
 
+import numpy as np
 import pytest
 import tomli
 
-from inftools.tistools.combine_results import combine_data
 from inftools.analysis.wham import wham
+from inftools.tistools.combine_results import combine_data
+
 
 @pytest.mark.heavy
 def test_infinit_1(tmp_path: PosixPath) -> None:
@@ -40,9 +41,9 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
             conf = tomli.load(rfile)
             intf = conf["simulation"]["interfaces"]
             assert len(combo_intf) >= len(intf)
-            intfs += intf  
+            intfs += intf
     assert set(intfs) == set(combo_intf)
-    
+
     # Assert that files exist
     assert os.path.isfile("combo.toml")
     assert os.path.isfile("combo.txt")
