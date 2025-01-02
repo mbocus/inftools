@@ -1,18 +1,17 @@
-from typing import Annotated, List, Tuple
-from pathlib import Path
-import typer
+from typing import Annotated
 
-import matplotlib.pyplot as plt
 import numpy as np
 import tomli
 import tomli_w
+import typer
 
 from inftools.misc.data_helper import data_reader
 
+
 def combine_data(
-    tomls: Annotated[List[str], typer.Option("-tomls", help="tomls for all \
+    tomls: Annotated[list[str], typer.Option("-tomls", help="tomls for all \
                                              simulations")],
-    datas: Annotated[List[str], typer.Option("-datas", help="data files for all \
+    datas: Annotated[list[str], typer.Option("-datas", help="data files for all \
                                              simulations")],
     skip: Annotated[int, typer.Option("-skip", help="skip initial lines for \
                                           all simulations")] = 100,
