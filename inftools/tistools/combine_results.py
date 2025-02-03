@@ -8,17 +8,10 @@ import typer
 from inftools.misc.data_helper import data_reader
 
 
-def combine_data(
-    tomls: Annotated[list[str], typer.Option("-tomls", help="tomls for all \
-simulations")],
-    datas: Annotated[list[str], typer.Option("-datas", help="data files for \
-all simulations")],
-    skip: Annotated[int, typer.Option("-skip", help="skip initial lines for \
-all simulations")] = 100,
-    scramble: Annotated[bool, typer.Option("-scramble", help="If output combo \
-data lines are scrambled.")] = True,
-    out: Annotated[str, typer.Option("-out", help="name for output .txt/toml \
-file.")] = "combo"
+def combine_data(tomls: Annotated[list[str], typer.Option("-tomls", help="tomls for all simulations")],
+                 datas: Annotated[list[str], typer.Option("-datas", help="data files for all simulations")],
+                 skip: Annotated[int, typer.Option("-skip", help="skip initial lines for all simulations")] = 100,
+                 out: Annotated[str, typer.Option("-out", help="name for output .txt/toml file.")] = "combo"
 ):
     """Combine different infretis simulations.
 
@@ -37,8 +30,7 @@ file.")] = "combo"
     then be stored in ram.
     """
     # do some initial checks
-    assert len(set(tomls)) == len(tomls)
-    assert len(set(datas)) == len(datas)
+    assert len(set(tomls)) == len(tomls) == len(set(datas)) == len(datas)
 
     # initialize some variables
     sims = {}
@@ -72,49 +64,54 @@ file.")] = "combo"
     with open(f"{out}.toml", "wb") as f:
         tomli_w.dump({"simulation":{"interfaces": tot_intfs}}, f)
 
-    # merge the sim results together with the combo col
-    scramble_l = []
-    with open(f"{out}.txt", "w") as write:
-        for idx in sims.keys():
-            sim_intfs = sims[idx]["intf"]
-            cols = list(range(len(sims[idx]["intf"])))
-            recol = [0, 1] + [col_order[i] for i in sim_intfs[1:-1]]
-            col_dic = {i: j for i, j in zip(cols, recol)}
+    # create combo col for individual sims
+    datalines = [[] for _ in range(len(sims))]
+    for idx in sims.keys():
+        sim_intfs = sims[idx]["intf"]
+        cols = list(range(len(sims[idx]["intf"])))
+        recol = [0, 1] + [col_order[i] for i in sim_intfs[1:-1]]
+        col_dic = {i: j for i, j in zip(cols, recol)}
 
-            for line_num, path in enumerate(sims[idx]["paths"]):
-                if line_num < skip:
-                    continue
-                frac, weig = [], []
+        for line_num, path in enumerate(sims[idx]["paths"]):
+            if line_num < skip:
+                continue
+            frac, weig = [], []
 
-                # create new pdic with combo cols:
-                pcols = {col_dic[i]:value for i, value in path["cols"].items()}
+            # create new pdic with combo cols:
+            pcols = {col_dic[i]:value for i, value in path["cols"].items()}
 
-                # fill up with weights or "----"
-                for col in range(len(tot_intfs)):
-                    if col in pcols:
-                        frac.append(pcols[col][0])
-                        weig.append(pcols[col][1])
-                    else:
-                        frac.append("----")
-                        weig.append("----")
-                string = ""
-                string += f"\t{path['pn']}\t"
-                string += f"{path['len']}" + "\t"
-                string += f"{path['max_op']}" + "\t"
-                if scramble:
-                    scramble_l.append(
-                        string + "\t".join(frac) + "\t" + "\t".join(weig) + "\t\n"
-                    )
+            # fill up with weights or "----"
+            for col in range(len(tot_intfs)):
+                if col in pcols:
+                    frac.append(pcols[col][0])
+                    weig.append(pcols[col][1])
                 else:
-                    write.write(
-                        string + "\t".join(frac) + "\t" + "\t".join(weig) + "\t\n"
-                    )
+                    frac.append("----")
+                    weig.append("----")
+            string = ""
+            string += f"\t{path['pn']}\t"
+            string += f"{path['len']}" + "\t"
+            string += f"{path['max_op']}" + "\t"
+            datalines[idx].append(
+                    string + "\t".join(frac) + "\t" + "\t".join(weig) + "\t\n"
+            )
 
-        if scramble_l:
-            np.random.seed(0)
-            np.random.shuffle(scramble_l)
-            for line in scramble_l:
+    # Zip data from individual simulations together for
+    # more accurate block error estimates
+    with open(f"{out}.txt", "w") as write:
+        data_lens = [len(i) for i in datalines]
+        data_tot = sum(data_lens)
+        modulos = [np.round(data_tot/i) for i in data_lens]
+        idx = 0
+        while sum([len(i) for i in datalines]) > 0:
+            towrite = []
+            for mod, data in zip(modulos, datalines):
+                if idx%mod == 0 and data:
+                    towrite.append(data.pop(0))
+
+            for line in towrite:
                 write.write(line)
+            idx += 1
 
     print("The following command can now be ran:")
     print("inft wham -toml combo.toml -data combo.txt -folder combo")

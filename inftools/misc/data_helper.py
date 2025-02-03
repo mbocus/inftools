@@ -30,13 +30,13 @@ def data_reader(inp):
             # skip if no weights
             if set(f0l) == set(w0l) == set(("----",)):
             	continue
-            
+
             # store only the weights based on col
             for col, (f0, w0) in enumerate(zip(f0l, w0l)):
             	if '----' in (f0, w0):
             		continue
             	path["cols"][col] = [f0, w0]
-            
+
             # append to paths list
             paths.append(path)
         return paths
