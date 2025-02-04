@@ -1,6 +1,6 @@
 """Test methods for combine_data."""
 import os
-from distutils.dir_util import copy_tree
+import shutil
 from pathlib import PosixPath
 
 import numpy as np
@@ -18,7 +18,7 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
     folder.mkdir()
     basepath = PosixPath(__file__).parent
     data_dir = (basepath / "data").resolve()
-    copy_tree(str(data_dir), str(folder))
+    shutil.copytree(str(data_dir), str(folder),dirs_exist_ok=True)
     os.chdir(folder)
 
     tomls=["sim1.toml", "sim2.toml", "sim3.toml"]
@@ -26,7 +26,6 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
         tomls=tomls,
         datas=["sim1.txt.gz", "sim2.txt.gz", "sim3.txt.gz"],
         skip=100,
-        scramble=True,
         out="combo"
     )
 
