@@ -2,11 +2,15 @@ import argparse
 from typing import Annotated
 import typer
 
+
 def trajtxt_conv(
     i: Annotated[str, typer.Option("-i")],
     o: Annotated[str, typer.Option("-o")],
-    r: Annotated[int, typer.Option("-r", help="Subcycle ratio, subcycle xtc /subsycle trr")],
-    ):
+    r: Annotated[
+        int,
+        typer.Option("-r", help="Subcycle ratio, subcycle xtc /subsycle trr"),
+    ],
+):
     """inft trjcat cannot be directly used when xtc is kept
     while delete_old=true during a gromacs infretis sim.
 
@@ -52,21 +56,17 @@ def trajtxt_conv(
                 else:
                     extra_b = 4
 
-        print(file)
-        print(np.arange(file_idx_s*r + extra_b, file_idx_e*r + it + extra_f, it), len(np.arange(file_idx_s*r + extra_b, file_idx_e*r + it + extra_f, it)))
-        print(file_idx_s, file_idx_e, it)
-        print(file_idx_s*r + extra_b, file_idx_e*r + it + extra_f, extra_f, extra_b)
-        print('')
-
-        for idx in np.arange(file_idx_s*r + extra_b, file_idx_e*r + it + extra_f, it):
+        for idx in np.arange(
+            file_idx_s * r + extra_b, file_idx_e * r + it + extra_f, it
+        ):
             data_out.append([file.replace(".trr", ".xtc"), idx, it])
-
-    print("len", len(data_out))
 
     with open(o, "w") as write:
         write.write("# comment\n")
         write.write("# comment\n")
         for idx, line in enumerate(data_out):
-            write.write(f"{idx:10.0f}    {line[0]}{line[1]:12.0f}{line[2]:7.0f}\n")
+            write.write(
+                f"{idx:10.0f}    {line[0]}{line[1]:12.0f}{line[2]:7.0f}\n"
+            )
 
     print(f"trajtxt_conv Done! with file {o}")
