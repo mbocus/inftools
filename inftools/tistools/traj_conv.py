@@ -15,7 +15,10 @@ def trajtxt_conv(
     while delete_old=true during a gromacs infretis sim.
 
     Here we provide a quick traj.txt converter, that also consders
-    if xtc frames are saved more frequently."""
+    if xtc frames are saved more frequently.
+
+	This function currently partially works. Do not expect 100%
+	overlap with the recalculated orderp and the original order.txt"""
 
     import numpy as np
 
