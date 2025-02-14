@@ -28,6 +28,9 @@ def trajtxt_conv(
     data_out = []
     files = []
 
+	# number of inbetween frames
+	inbtw = r - 1
+
     # First get unique path files
     for file in data[:, 1]:
         if file not in files:
@@ -48,16 +51,16 @@ def trajtxt_conv(
         if file_nr > 0:
             # reverse,
             if it == -1:
-                extra_b = 4
+                extra_b = inbtw
             elif it == 1 and file_idx_s == 1:
-                extra_b = -4
-                extra_f = 4
+                extra_b = -inbtw
+                extra_f = inbtw
             # only one frame, traj usually contain at least two subcycles
             elif file_idx_s == file_idx_e:
                 if it == 1:
-                    extra_f = 4
+                    extra_f = inbtw
                 else:
-                    extra_b = 4
+                    extra_b = inbtw
 
         for idx in np.arange(
             file_idx_s * r + extra_b, file_idx_e * r + it + extra_f, it
