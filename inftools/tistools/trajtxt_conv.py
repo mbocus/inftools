@@ -29,7 +29,7 @@ def trajtxt_conv(
     files = []
 
 	# number of inbetween frames
-	inbtw = r - 1
+    inbtw = r - 1
 
     # First get unique path files
     for file in data[:, 1]:
