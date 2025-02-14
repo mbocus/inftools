@@ -26,7 +26,6 @@ def plot_msg(
         if cap is not None:
             plt.axhline(cap, color='r', ls="--")
 
-
     # iterate through worker folder
     for i in range(9999):
         wfolder = f"worker{i}"
@@ -54,9 +53,9 @@ def plot_msg(
         if intfs and ens > -1:
             intf_idx = ens if ens == 0 else ens - 1
             plt.axhline(intfs[intf_idx], color=f"C{i%8}", label=f"{ens:03}-worker{i}")
+            plt.legend()
 
     if i > 0:
-        plt.legend()
         plt.show()
     else:
         print("Not in the root infretis simulation folder!")
