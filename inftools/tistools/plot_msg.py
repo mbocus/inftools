@@ -44,10 +44,10 @@ def plot_msg(
             msg = np.loadtxt(wfolder + "/" + file)
             try:
                 plt.plot(msg[:, 0] + idx, msg[:, 1], color=f"C{i%8}")
+                plt.scatter([msg[-1, 0] + idx], [msg[-1, 1]], color=f"C{i%8}", edgecolor='k')
                 idx += len(msg[:, 0])
             except:
                 print("cannot plot", wfolder + "/" + file, "perhaps no op printed yet")
-        plt.scatter([msg[-1, 0] + idx -len(msg[:, 0])], [msg[-1, 1]], color=f"C{i%8}", edgecolor='k')
 
         # plt ensemble intfs
         if intfs and ens > -1:
