@@ -63,7 +63,7 @@ def plot_msg(
 
         # get op from msg files in sorted order
         files = [j for j in os.listdir(wfolder) if "msg" in j]
-        files_idx = [int(j.split("_")[2]) for j in files]
+        files_idx = [int(j.split("_")[-2]) for j in files]
         files = np.array(files)[np.argsort(files_idx)]
 
         for file in files:
