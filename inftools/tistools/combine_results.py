@@ -10,7 +10,7 @@ from inftools.misc.data_helper import data_reader
 
 def combine_data(tomls: Annotated[list[str], typer.Option("-tomls", help="tomls for all simulations")],
                  datas: Annotated[list[str], typer.Option("-datas", help="data files for all simulations")],
-                 skip: Annotated[int, typer.Option("-skip", help="skip initial lines for all simulations")] = 100,
+                 skip: Annotated[list[int], typer.Option("-skip", help="skip initial lines for simulations.")] = [100],
                  out: Annotated[str, typer.Option("-out", help="name for output .txt/toml file.")] = "combo"
 ):
     """Combine different infretis simulations.
@@ -24,13 +24,17 @@ def combine_data(tomls: Annotated[list[str], typer.Option("-tomls", help="tomls 
 
     -tomls sim1 -tomls sim2 -datas data1 -datas data2.
 
-    # NB: If output data is not scrambled, then one
-    column will remain as "----" state for one whole sim.
-    On the other side, in this implementation all data must
-    then be stored in ram.
+    -skip can be either one value, or specific skip value
+    must be specified for each simulation data.
     """
     # do some initial checks
     assert len(set(tomls)) == len(tomls) == len(set(datas)) == len(datas)
+
+    # check that len(skip) is either 1 (so same skip for all),
+    # or 1 for each sim
+    if len(set(tomls)) > 1 and len(skip) == 1:
+        skip = skip*len(set(tomls))
+    assert len(skip) in (1, len(set(tomls)))
 
     # initialize some variables
     sims = {}
@@ -73,7 +77,7 @@ def combine_data(tomls: Annotated[list[str], typer.Option("-tomls", help="tomls 
         col_dic = {i: j for i, j in zip(cols, recol)}
 
         for line_num, path in enumerate(sims[idx]["paths"]):
-            if line_num < skip:
+            if line_num < skip[idx]:
                 continue
             frac, weig = [], []
 
