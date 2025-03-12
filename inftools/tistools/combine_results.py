@@ -32,9 +32,9 @@ def combine_data(tomls: Annotated[list[str], typer.Option("-tomls", help="tomls 
 
     # check that len(skip) is either 1 (so same skip for all),
     # or 1 for each sim
+    assert len(skip) in (1, len(set(tomls)))
     if len(set(tomls)) > 1 and len(skip) == 1:
         skip = skip*len(set(tomls))
-    assert len(skip) in (1, len(set(tomls)))
 
     # initialize some variables
     sims = {}
