@@ -25,7 +25,7 @@ def test_infinit_1(tmp_path: PosixPath) -> None:
     combine_data(
         tomls=tomls,
         datas=["sim1.txt.gz", "sim2.txt.gz", "sim3.txt.gz"],
-        skip=100,
+        skip=[100],
         out="combo"
     )
 
