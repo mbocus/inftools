@@ -57,9 +57,9 @@ def calc_reaction_free_energy(
 
     assert not (fn_out is None and plot is None), "Please provide out and/or plot arguments"
     if out_unit != 1.0 and out_unit_name == "k_B*T":
-        print("Warning: it seems you have set out_unit but not the respective out_unit_name")
+        print("WARNING: it seems you have set out_unit but not the respective out_unit_name. The values and labels in the output files WILL NOT MATCH.")
     elif out_unit == 1.0 and out_unit_name != "k_B*T":
-        print("Warning: it seems you have set out_unit_name but not the respective out_unit")
+        print("WARNING: it seems you have set out_unit_name but not the respective out_unit. The values and labels in the output files WILL NOT MATCH.")
 
     path_wham_f = Path.cwd() / wham1
     path_wham_b = Path.cwd() / wham2
